@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Needs - CSE-VMS</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #222;
+        }
+
+        .header {
+            background: #198754;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .header button {
+            background: white;
+            color: #198754;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 25px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-bar h2 {
+            color: #198754;
+        }
+
+        .refresh-btn {
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #198754;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .urgency {
+            font-weight: bold;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Community Needs</h1>
+
+        <button onclick="window.location.href='admin.html'">
+            Back to Dashboard
+        </button>
+    </div>
+
+    <div class="container">
+
+        <div class="top-bar">
+            <h2>Submitted Community Needs</h2>
+
+            <button class="refresh-btn" onclick="loadCommunityNeeds()">
+                Refresh
+            </button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Community Member</th>
+                        <th>Need Title</th>
+                        <th>Description</th>
+                        <th>Required Skill</th>
+                        <th>Location</th>
+                        <th>Urgency</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody id="needsTableBody">
+                    <tr>
+                        <td colspan="9" class="empty">
+                            Loading community needs...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:3000/api/community/needs";
+
+        function showMessage(message, type) {
+            const messageBox = document.getElementById("message");
+
+            messageBox.textContent = message;
+            messageBox.className = "message " + type;
+            messageBox.style.display = "block";
+        }
+
+        function showError(message) {
+            showMessage(message, "error");
+        }
+
+        async function loadCommunityNeeds() {
+
+            const tableBody = document.getElementById("needsTableBody");
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="empty">
+                        Loading community needs...
+                    </td>
+                </tr>
+            `;
+
+            try {
+
+                const token = localStorage.getItem("cse_vms_token");
+
+                if (!token) {
+                    throw new Error("Access token is missing. Please login again.");
+                }
+
+                const response = await fetch(API_URL, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message || "Failed to load community needs."
+                    );
+                }
+
+                if (!data.needs || data.needs.length === 0) {
+
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="empty">
+                                No community needs found.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                tableBody.innerHTML = "";
+
+                data.needs.forEach((need, index) => {
+
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+
+                        <td>
+                            ${escapeHtml(need.community_member_name || "N/A")}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(need.title || "N/A")}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(need.description || "N/A")}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(need.skill_name || "N/A")}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(need.location || "N/A")}
+                        </td>
+
+                        <td class="urgency">
+                            ${escapeHtml(need.urgency || "N/A")}
+                        </td>
+
+                        <td class="status">
+                            ${escapeHtml(need.status || "N/A")}
+                        </td>
+
+                        <td>
+                            ${formatDate(need.created_at)}
+                        </td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+
+                showMessage(
+                    data.count + " community need(s) loaded successfully.",
+                    "success"
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="empty">
+                            Failed to load community needs.
+                        </td>
+                    </tr>
+                `;
+
+                showError(error.message);
+            }
+        }
+
+        function formatDate(dateValue) {
+
+            if (!dateValue) {
+                return "N/A";
+            }
+
+            const date = new Date(dateValue);
+
+            if (isNaN(date.getTime())) {
+                return dateValue;
+            }
+
+            return date.toLocaleString();
+        }
+
+        function escapeHtml(value) {
+
+            const div = document.createElement("div");
+
+            div.textContent = value;
+
+            return div.innerHTML;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCommunityNeeds();
+        });
+    </script>
+
+</body>
+</html>

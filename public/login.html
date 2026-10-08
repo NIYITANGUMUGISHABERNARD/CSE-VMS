@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE-VMS | Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(circle at 10% 20%, lightwhite, transparent 24%),
+                radial-gradient(circle at 90% 25%, lavender, transparent 25%),
+                radial-gradient(circle at 50% 100%, moccasin, transparent 28%),
+                linear-gradient(
+                    135deg,
+                    honeydew,
+                    alicewhite,
+                    lavenderblush
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 80px 20px 70px;
+        }
+
+        /* TOP COLOR BAR */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 7px;
+
+            background: linear-gradient(
+                90deg,
+                darkgreen,
+                seagreen,
+                royalwhite,
+                whiteviolet,
+                orange,
+                seagreen,
+                darkgreen
+            );
+
+            z-index: 1000;
+        }
+
+        /* BOTTOM COLOR BAR */
+        body::after {
+            content: "";
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 7px;
+
+            background: linear-gradient(
+                90deg,
+                orange,
+                whiteviolet,
+                royalwhite,
+                seagreen,
+                darkgreen,
+                seagreen,
+                royalwhite,
+                whiteviolet,
+                orange
+            );
+
+            z-index: 1000;
+        }
+
+        /* TOP HEADER */
+        .cse-top-bar {
+            position: fixed;
+            top: 7px;
+            left: 0;
+            right: 0;
+            height: 54px;
+
+            background: white;
+
+            backdrop-filter: blur(12px);
+
+            border-bottom: 1px solid lightgray;
+
+            box-shadow: 0 4px 18px lightgray;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+            z-index: 100;
+        }
+
+        .cse-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: darkgreen;
+
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            font-size: 20px;
+        }
+
+        .cse-brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+
+            background: linear-gradient(
+                135deg,
+                darkgreen,
+                seagreen
+            );
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+            font-size: 20px;
+
+            box-shadow: 0 5px 14px darkgreen;
+        }
+
+        .cse-top-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            color: slategray;
+
+            font-size: 14px;
+        }
+
+        .system-online {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .online-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+
+            background: limegreen;
+
+            box-shadow: 0 0 0 4px lightgreen;
+        }
+
+        /* MAIN LOGIN */
+        .login-wrapper {
+            width: 900px;
+            max-width: 94%;
+            min-height: 520px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            background: white;
+
+            border-radius: 18px;
+            overflow: hidden;
+
+            box-shadow: 0 20px 55px gray;
+
+            position: relative;
+            z-index: 10;
+        }
+
+        /* WELCOME */
+        .welcome-panel {
+            background:
+                radial-gradient(
+                    circle at 85% 15%,
+                    lightwhite,
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at 15% 85%,
+                    moccasin,
+                    transparent 25%
+                ),
+
+                linear-gradient(
+                    145deg,
+                    darkgreen,
+                    darkseagreen,
+                    seagreen
+                );
+
+            color: white;
+
+            padding: 55px 45px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-panel::before {
+            content: "";
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            border: 30px solid whitesmoke;
+
+            border-radius: 50%;
+
+            right: -70px;
+            top: -60px;
+        }
+
+        .welcome-panel::after {
+            content: "";
+            position: absolute;
+
+            width: 140px;
+            height: 140px;
+
+            border: 25px solid orange;
+
+            border-radius: 50%;
+
+            left: -70px;
+            bottom: -55px;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+
+            border-radius: 14px;
+
+            background: white;
+
+            color: darkgreen;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+            font-weight: bold;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 10px 25px gray;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-panel h1 {
+            font-size: 34px;
+            margin-bottom: 17px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-panel p {
+            line-height: 1.7;
+
+            color: honeydew;
+
+            font-size: 17px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .system-name {
+            margin-top: 35px;
+
+            font-size: 15px;
+
+            color: lightgreen;
+
+            line-height: 1.6;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        /* LOGIN PANEL */
+        .login-panel {
+            padding: 55px 45px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            background: white;
+
+            position: relative;
+        }
+
+        .login-panel::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 5px;
+            height: 100%;
+
+            background: linear-gradient(
+                seagreen,
+                royalwhite,
+                whiteviolet
+            );
+        }
+
+        .login-panel h2 {
+            color: darkgreen;
+
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .login-panel > p {
+            color: gray;
+
+            margin-bottom: 30px;
+
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            font-weight: bold;
+
+            color: darkslategray;
+
+            font-size: 18px;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 15px 16px;
+
+            border: 1px solid lightgray;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 18px;
+
+            transition: 0.2s;
+        }
+
+        .form-group input::placeholder {
+            font-size: 17px;
+
+            color: gray;
+        }
+
+        .form-group input:focus {
+            border-color: seagreen;
+
+            box-shadow: 0 0 0 3px lightgreen;
+        }
+
+        .login-btn {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: seagreen;
+
+            color: white;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            background: darkgreen;
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+
+            padding: 12px;
+
+            margin-bottom: 18px;
+
+            border-radius: 7px;
+
+            font-size: 16px;
+        }
+
+        .message.error {
+            display: block;
+
+            background: mistyrose;
+
+            color: firebrick;
+
+            border: 1px solid pink;
+        }
+
+        .message.success {
+            display: block;
+
+            background: honeydew;
+
+            color: seagreen;
+
+            border: 1px solid lightgreen;
+        }
+
+        .footer-text {
+            text-align: center;
+
+            margin-top: 25px;
+
+            font-size: 14px;
+
+            color: gray;
+        }
+
+        /* LEFT DECORATION */
+        .left-decoration {
+            position: fixed;
+
+            left: 28px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 180px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 12px;
+
+            z-index: 5;
+        }
+
+        .left-title {
+            padding: 17px;
+
+            border-radius: 16px;
+
+            color: white;
+
+            background: linear-gradient(
+                135deg,
+                darkgreen,
+                seagreen
+            );
+
+            box-shadow: 0 12px 30px gray;
+        }
+
+        .left-title small {
+            display: block;
+
+            font-size: 11px;
+
+            opacity: 0.8;
+
+            margin-bottom: 5px;
+
+            letter-spacing: 1px;
+        }
+
+        .left-title strong {
+            font-size: 16px;
+
+            line-height: 1.4;
+        }
+
+        .left-card {
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 13px;
+
+            box-shadow: 0 8px 24px lightgray;
+
+            border-left: 4px solid royalwhite;
+        }
+
+        .left-card:nth-child(3) {
+            border-left-color: orange;
+        }
+
+        .left-card:nth-child(4) {
+            border-left-color: whiteviolet;
+        }
+
+        .left-card strong {
+            display: block;
+
+            font-size: 15px;
+
+            color: darkslategray;
+        }
+
+        .left-card span {
+            display: block;
+
+            font-size: 11px;
+
+            color: slategray;
+
+            margin-top: 3px;
+        }
+
+        /* RIGHT DECORATION */
+        .right-decoration {
+            position: fixed;
+
+            right: 28px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 190px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 10px;
+
+            z-index: 5;
+        }
+
+        .right-card {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 11px;
+
+            background: white;
+
+            border-radius: 14px;
+
+            box-shadow: 0 8px 24px lightgray;
+
+            transition: 0.2s;
+        }
+
+        .right-card:hover {
+            transform: translateX(-5px);
+
+            box-shadow: 0 12px 28px gray;
+        }
+
+        .right-icon {
+            width: 37px;
+            height: 37px;
+
+            min-width: 37px;
+
+            border-radius: 10px;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+        }
+
+        .green {
+            background: linear-gradient(
+                135deg,
+                darkgreen,
+                seagreen
+            );
+        }
+
+        .white {
+            background: linear-gradient(
+                135deg,
+                mediumwhite,
+                royalwhite
+            );
+        }
+
+        .yellow {
+            background: linear-gradient(
+                135deg,
+                darkorange,
+                orange
+            );
+        }
+
+        .purple {
+            background: linear-gradient(
+                135deg,
+                indigo,
+                whiteviolet
+            );
+        }
+
+        .red {
+            background: linear-gradient(
+                135deg,
+                firebrick,
+                red
+            );
+        }
+
+        .right-text strong {
+            display: block;
+
+            font-size: 13px;
+
+            color: darkslategray;
+        }
+
+        .right-text span {
+            display: block;
+
+            font-size: 10px;
+
+            color: slategray;
+
+            margin-top: 2px;
+        }
+
+        /* CIRCLES */
+        .decoration-circle {
+            position: fixed;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: 0;
+        }
+
+        .circle-one {
+            width: 180px;
+            height: 180px;
+
+            left: -75px;
+            top: 18%;
+
+            border: 30px solid lightwhite;
+        }
+
+        .circle-two {
+            width: 210px;
+            height: 210px;
+
+            right: -85px;
+            bottom: 14%;
+
+            border: 32px solid lavender;
+        }
+
+        .circle-three {
+            width: 80px;
+            height: 80px;
+
+            left: 24%;
+            top: 18%;
+
+            background: moccasin;
+        }
+
+        /* BOTTOM */
+        .bottom-decoration {
+            position: fixed;
+
+            bottom: 7px;
+
+            left: 0;
+            right: 0;
+
+            height: 38px;
+
+            background: white;
+
+            border-top: 1px solid lightgray;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 15px;
+
+            color: slategray;
+
+            font-size: 12px;
+
+            z-index: 100;
+        }
+
+        .bottom-green {
+            color: green;
+        }
+
+        .bottom-white {
+            color: royalwhite;
+        }
+
+        .bottom-purple {
+            color: whiteviolet;
+        }
+
+        .bottom-yellow {
+            color: darkorange;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+
+            .left-decoration {
+                left: 12px;
+                width: 145px;
+            }
+
+            .right-decoration {
+                right: 12px;
+                width: 150px;
+            }
+
+            .right-text {
+                display: none;
+            }
+
+            .right-card {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 950px) {
+
+            .left-decoration,
+            .right-decoration,
+            .circle-one,
+            .circle-two,
+            .circle-three {
+                display: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 75px 15px 65px;
+            }
+
+            .cse-top-bar {
+                padding: 0 15px;
+            }
+
+            .cse-top-info {
+                display: none;
+            }
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+
+                width: 900px;
+
+                max-width: 94%;
+            }
+
+            .welcome-panel {
+                padding: 35px;
+            }
+
+            .login-panel {
+                padding: 35px;
+            }
+
+            .login-panel h2 {
+                font-size: 30px;
+            }
+
+            .form-group label {
+                font-size: 17px;
+            }
+
+            .form-group input {
+                font-size: 17px;
+            }
+
+            .bottom-decoration {
+                gap: 7px;
+
+                font-size: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP HEADER -->
+
+    <div class="cse-top-bar">
+
+        <div class="cse-brand">
+
+            <div class="cse-brand-logo">
+                C
+            </div>
+
+            <span>
+                CSE-VMS
+            </span>
+
+        </div>
+
+        <div class="cse-top-info">
+
+            <div class="system-online">
+
+                <span class="online-dot"></span>
+
+                System Online
+
+            </div>
+
+            <span>
+                Community • Skills • Volunteers
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- LEFT DECORATION -->
+
+    <div class="left-decoration">
+
+        <div class="left-title">
+
+            <small>
+                COMMUNITY PLATFORM
+            </small>
+
+            <strong>
+                Connect. Exchange. Serve.
+            </strong>
+
+        </div>
+
+        <div class="left-card">
+
+            <strong>
+                Skills
+            </strong>
+
+            <span>
+                Exchange knowledge
+            </span>
+
+        </div>
+
+        <div class="left-card">
+
+            <strong>
+                Volunteers
+            </strong>
+
+            <span>
+                Support communities
+            </span>
+
+        </div>
+
+        <div class="left-card">
+
+            <strong>
+                Activities
+            </strong>
+
+            <span>
+                Manage participation
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- DECORATIVE CIRCLES -->
+
+    <div class="decoration-circle circle-one"></div>
+
+    <div class="decoration-circle circle-two"></div>
+
+    <div class="decoration-circle circle-three"></div>
+
+
+    <!-- LOGIN -->
+
+    <div class="login-wrapper">
+
+        <section class="welcome-panel">
+
+            <div class="logo">
+                C
+            </div>
+
+            <h1>
+                Welcome to CSE-VMS
+            </h1>
+
+            <p>
+                Community Skills Exchange and Volunteer
+                Management System for managing community
+                skills, volunteers, needs, activities and
+                participation.
+            </p>
+
+            <div class="system-name">
+
+                Secure Community Management Platform<br>
+
+                © 2026 CSE-VMS
+
+            </div>
+
+        </section>
+
+
+        <section class="login-panel">
+
+            <h2>
+                Sign In
+            </h2>
+
+            <p>
+                Enter your account credentials to continue.
+            </p>
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                    id="loginButton"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <div class="footer-text">
+                Authorized users only
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- RIGHT DECORATION -->
+
+    <div class="right-decoration">
+
+        <div class="right-card">
+
+            <div class="right-icon green">
+                👥
+            </div>
+
+            <div class="right-text">
+
+                <strong>
+                    Community
+                </strong>
+
+                <span>
+                    Community members
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="right-card">
+
+            <div class="right-icon white">
+                🤝
+            </div>
+
+            <div class="right-text">
+
+                <strong>
+                    Volunteers
+                </strong>
+
+                <span>
+                    Volunteer management
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="right-card">
+
+            <div class="right-icon yellow">
+                💡
+            </div>
+
+            <div class="right-text">
+
+                <strong>
+                    Skills Exchange
+                </strong>
+
+                <span>
+                    Share useful skills
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="right-card">
+
+            <div class="right-icon purple">
+                📋
+            </div>
+
+            <div class="right-text">
+
+                <strong>
+                    Activities
+                </strong>
+
+                <span>
+                    Track activities
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="right-card">
+
+            <div class="right-icon red">
+                🔔
+            </div>
+
+            <div class="right-text">
+
+                <strong>
+                    Notifications
+                </strong>
+
+                <span>
+                    Stay informed
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOTTOM -->
+
+    <div class="bottom-decoration">
+
+        <span class="bottom-green">
+            ● Secure Platform
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span class="bottom-white">
+            CSE-VMS
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span class="bottom-purple">
+            Community Management
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span class="bottom-yellow">
+            Skills Exchange
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span>
+            © 2026
+        </span>
+
+    </div>
+
+
+    <!-- LOGIN JAVASCRIPT -->
+
+    <script>
+
+        const API_BASE =
+            "http://127.0.0.1:3000";
+
+
+        const loginForm =
+            document.getElementById(
+                "loginForm"
+            );
+
+
+        const loginButton =
+            document.getElementById(
+                "loginButton"
+            );
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.className =
+                "message " + type;
+        }
+
+
+        loginForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                        .getElementById(
+                            "email"
+                        )
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById(
+                            "password"
+                        )
+                        .value;
+
+
+                loginButton.disabled =
+                    true;
+
+
+                loginButton.textContent =
+                    "Signing in...";
+
+
+                message.className =
+                    "message";
+
+
+                message.textContent =
+                    "";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${API_BASE}/api/auth/login`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        email:
+                                            email,
+
+                                        password:
+                                            password
+                                    })
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (
+                        !response.ok ||
+                        !data.success
+                    ) {
+
+                        throw new Error(
+                            data.message ||
+                            "Invalid email or password."
+                        );
+                    }
+
+
+                    const token =
+                        data.token ||
+                        data.accessToken ||
+                        data.data?.token;
+
+
+                    if (!token) {
+
+                        throw new Error(
+                            "Login succeeded but no authentication token was returned."
+                        );
+                    }
+
+
+                    localStorage.setItem(
+                        "cse_vms_token",
+                        token
+                    );
+
+
+                    const user =
+                        data.user ||
+                        data.data?.user ||
+                        {};
+
+
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(user)
+                    );
+
+
+                    const role =
+                        user.role ||
+                        user.role_name ||
+                        user.roleName ||
+                        data.role ||
+                        data.role_name ||
+                        "";
+
+
+                    showMessage(
+                        "Login successful. Redirecting...",
+                        "success"
+                    );
+
+
+                    setTimeout(
+                        () => {
+
+                            const normalizedRole =
+                                String(role)
+                                    .toLowerCase()
+                                    .trim();
+
+
+                            if (
+                                normalizedRole.includes(
+                                    "administrator"
+                                ) ||
+                                normalizedRole ===
+                                    "admin"
+                            ) {
+
+                                window.location.href =
+                                    "admin.html";
+
+                            }
+
+                            else if (
+                                normalizedRole.includes(
+                                    "coordinator"
+                                )
+                            ) {
+
+                                window.location.href =
+                                    "coordinator.html";
+
+                            }
+
+                            else if (
+                                normalizedRole.includes(
+                                    "volunteer"
+                                )
+                            ) {
+
+                                window.location.href =
+                                    "volunteer.html";
+
+                            }
+
+                            else if (
+                                normalizedRole.includes(
+                                    "community"
+                                )
+                            ) {
+
+                                window.location.href =
+                                    "community.html";
+
+                            }
+
+                            else {
+
+                                window.location.href =
+                                    "admin.html";
+                            }
+
+                        },
+                        700
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to login.",
+                        "error"
+                    );
+
+
+                    loginButton.disabled =
+                        false;
+
+
+                    loginButton.textContent =
+                        "Login";
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CSE-VMS | Admin Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                C
+            </div>
+
+            <div>
+                <h2>CSE-VMS</h2>
+                <span>Administration</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="admin.html" class="nav-item active">
+                Dashboard
+            </a>
+
+            <a href="users.html" class="nav-item">
+                Users
+            </a>
+
+            <a href="skills.html" class="nav-item">
+                Skills
+            </a>
+
+            <a href="community-needs.html" class="nav-item">
+                Community Needs
+            </a>
+
+            <a href="activities.html" class="nav-item">
+                Activities
+            </a>
+
+            <a href="notifications.html" class="nav-item">
+                Notifications
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-profile">
+
+                <div class="avatar">
+                    A
+                </div>
+
+                <div>
+                    <strong>Administrator</strong>
+                    <small>System Admin</small>
+                </div>
+
+            </div>
+
+
+            <button
+                class="logout-btn"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    Monitor and manage the Community Skills Exchange
+                    and Volunteer Management System.
+                </p>
+
+            </div>
+
+
+            <div
+                class="date-display"
+                id="currentDate"
+            >
+                Loading...
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             DASHBOARD STATISTICS
+        ========================== -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Total Users</span>
+
+                    <strong id="totalUsers">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Volunteers</span>
+
+                    <strong id="totalVolunteers">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Community Members</span>
+
+                    <strong id="totalCommunityMembers">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Skills</span>
+
+                    <strong id="totalSkills">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Coordinators</span>
+
+                    <strong id="totalCoordinators">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Assignments</span>
+
+                    <strong id="totalAssignments">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Participations</span>
+
+                    <strong id="totalParticipations">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <span>Notifications</span>
+
+                    <strong id="totalNotifications">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SYSTEM OVERVIEW
+        ========================== -->
+
+        <section class="content-grid">
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>System Overview</h2>
+
+                        <p>
+                            Current system activity summary
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="overview-list">
+
+
+                    <div class="overview-row">
+
+                        <span>
+                            Registered Users
+                        </span>
+
+                        <strong id="overviewUsers">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-row">
+
+                        <span>
+                            Registered Volunteers
+                        </span>
+
+                        <strong id="overviewVolunteers">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-row">
+
+                        <span>
+                            Community Members
+                        </span>
+
+                        <strong id="overviewCommunity">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-row">
+
+                        <span>
+                            Available Skills
+                        </span>
+
+                        <strong id="overviewSkills">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-row">
+
+                        <span>
+                            Community Needs
+                        </span>
+
+                        <strong id="overviewNeeds">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-row">
+
+                        <span>
+                            Volunteer Assignments
+                        </span>
+
+                        <strong id="overviewAssignments">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 QUICK ACTIONS
+            ========================== -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>Quick Actions</h2>
+
+                        <p>
+                            Common administrative operations
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+
+                    <button
+                        class="action-card"
+                        onclick="window.location.href='users.html'"
+                    >
+
+                        <strong>
+                            Manage Users
+                        </strong>
+
+                        <small>
+                            Create and manage user accounts
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        onclick="window.location.href='skills.html'"
+                    >
+
+                        <strong>
+                            Manage Skills
+                        </strong>
+
+                        <small>
+                            Add and manage community skills
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        onclick="window.location.href='community-needs.html'"
+                    >
+
+                        <strong>
+                            Community Needs
+                        </strong>
+
+                        <small>
+                            Review submitted community needs
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        onclick="window.location.href='notifications.html'"
+                    >
+
+                        <strong>
+                            Notifications
+                        </strong>
+
+                        <small>
+                            Monitor system notifications
+                        </small>
+
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =========================
+             SYSTEM STATUS
+        ========================== -->
+
+        <section class="system-status">
+
+            <div>
+
+                <h2>
+                    System Status
+                </h2>
+
+                <p>
+                    CSE-VMS backend services and database connectivity.
+                </p>
+
+            </div>
+
+
+            <div class="status-indicator">
+
+                <span class="status-dot"></span>
+
+                <strong>
+                    System Online
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <footer class="dashboard-footer">
+
+            <span>
+                Community Skills Exchange and Volunteer Management System
+            </span>
+
+            <span>
+                CSE-VMS - 2026
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+<script src="js/app.js"></script>
+
+
+<script>
+    function logout() {
+        localStorage.removeItem("cse_vms_token");
+        window.location.href = "index.html";
+    }
+</script>
+
+
+</body>
+
+</html>

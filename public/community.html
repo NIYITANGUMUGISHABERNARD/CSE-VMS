@@ -1,0 +1,2930 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Member Dashboard - CSE-VMS</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f4f6f9;
+    color: #1f2937;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: #1f2937;
+    color: white;
+    padding: 25px 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 20px;
+}
+
+.nav-item {
+    display: block;
+    width: 100%;
+    padding: 13px 15px;
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: #374151;
+}
+
+.logout {
+    margin-top: 20px;
+    background: #b91c1c;
+}
+
+.logout:hover {
+    background: #991b1b;
+}
+
+.main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    padding: 30px;
+}
+
+.header {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.header h1 {
+    margin-bottom: 8px;
+    font-size: 28px;
+}
+
+.header p {
+    color: #6b7280;
+}
+
+.date {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.panel {
+    display: none;
+}
+
+.panel.active {
+    display: block;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.card h3 {
+    font-size: 15px;
+    color: #6b7280;
+    margin-bottom: 10px;
+}
+
+.card .number {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.status {
+    color: #15803d;
+    font-weight: bold;
+}
+
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+}
+
+.section h2 {
+    margin-bottom: 8px;
+    font-size: 22px;
+}
+
+.section-description {
+    color: #6b7280;
+    margin-bottom: 22px;
+}
+
+form {
+    display: grid;
+    gap: 17px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.08);
+}
+
+textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.feedback-textarea {
+    min-height: 160px;
+}
+
+.btn {
+    border: none;
+    border-radius: 7px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    background: #2563eb;
+    color: white;
+    width: fit-content;
+}
+
+.btn:hover {
+    background: #1d4ed8;
+}
+
+.btn-success {
+    background: #15803d;
+}
+
+.btn-success:hover {
+    background: #166534;
+}
+
+.btn-danger {
+    background: #b91c1c;
+}
+
+.btn-danger:hover {
+    background: #991b1b;
+}
+
+.btn-secondary {
+    background: #4b5563;
+}
+
+.btn-secondary:hover {
+    background: #374151;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.message {
+    display: none;
+    padding: 12px 15px;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.message.success {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.message.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.message.info {
+    display: block;
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th,
+td {
+    padding: 13px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background: #f9fafb;
+    font-weight: 600;
+}
+
+.empty {
+    padding: 20px;
+    color: #6b7280;
+    background: #f9fafb;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.profile-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.profile-card h3 {
+    margin-bottom: 15px;
+}
+
+.profile-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+.profile-label {
+    font-weight: 600;
+}
+
+.feedback-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.feedback-card h3 {
+    margin-bottom: 8px;
+}
+
+.feedback-card p {
+    margin-bottom: 7px;
+    color: #4b5563;
+}
+
+.feedback-form {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.submitted {
+    padding: 13px 15px;
+    background: #dcfce7;
+    color: #166534;
+    border-radius: 7px;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.volunteer-box {
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.volunteer-box h3 {
+    margin-bottom: 10px;
+}
+
+.volunteer-box p {
+    margin-bottom: 7px;
+    color: #4b5563;
+}
+
+.notification {
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.notification h3 {
+    margin-bottom: 5px;
+}
+
+.notification p {
+    color: #4b5563;
+    margin-bottom: 5px;
+}
+
+.small {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+@media (max-width: 900px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main {
+        margin-left: 210px;
+        width: calc(100% - 210px);
+    }
+
+    .profile-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .layout {
+        display: block;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+<h2>CSE-VMS</h2>
+
+<button class="nav-item active" data-panel="dashboard">
+    Dashboard
+</button>
+
+<button class="nav-item" data-panel="profile">
+    My Profile
+</button>
+
+<button class="nav-item" data-panel="needs">
+    Submit Community Needs
+</button>
+
+<button class="nav-item" data-panel="assigned">
+    View Assigned Volunteer
+</button>
+
+<button class="nav-item" data-panel="notifications">
+    Notifications
+</button>
+
+<button class="nav-item" data-panel="feedback">
+    Provide Feedback on Service
+</button>
+
+<button class="nav-item logout" id="logoutBtn">
+    Logout
+</button>
+
+</aside>
+
+<main class="main">
+
+<div class="header">
+    <h1>Community Member Dashboard</h1>
+    <p>Submit community needs and connect with assigned volunteers.</p>
+    <div class="date" id="currentDate"></div>
+</div>
+
+
+<!-- DASHBOARD -->
+
+<section class="panel active" id="dashboard">
+
+<div class="cards">
+
+<div class="card">
+    <h3>My Community Needs</h3>
+    <div class="number" id="needsCount">0</div>
+    <p class="small">Needs submitted</p>
+</div>
+
+<div class="card">
+    <h3>Assigned Volunteers</h3>
+    <div class="number" id="volunteerCount">0</div>
+    <p class="small">Volunteers assigned to your needs</p>
+</div>
+
+<div class="card">
+    <h3>System Status</h3>
+    <div class="number status">✓</div>
+    <p class="small">Connected to CSE-VMS</p>
+</div>
+
+</div>
+
+<div class="section">
+    <h2>Welcome</h2>
+
+    <p class="section-description">
+        Use the menu to manage your profile, submit community needs,
+        view your assigned volunteer, receive notifications,
+        and provide feedback about the service received.
+    </p>
+</div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section class="panel" id="profile">
+
+<div class="section">
+
+<h2>My Community Member Profile</h2>
+
+<p class="section-description">
+    Manage your community member information.
+</p>
+
+<div id="profileMessage" class="message"></div>
+
+
+<!-- CREATE PROFILE -->
+
+<div id="createProfileContainer">
+
+<form id="profileForm">
+
+<div class="form-group">
+<label for="profileFullName">Full Name *</label>
+<input
+    type="text"
+    id="profileFullName"
+    required
+    placeholder="Enter your full name">
+</div>
+
+<div class="form-group">
+<label for="profileAddress">Address *</label>
+<input
+    type="text"
+    id="profileAddress"
+    required
+    placeholder="Enter your address">
+</div>
+
+<div class="form-group">
+<label for="profilePhone">Phone</label>
+<input
+    type="text"
+    id="profilePhone"
+    placeholder="Enter your phone number">
+</div>
+
+<div class="form-group">
+<label for="profileDescription">Description</label>
+<textarea
+    id="profileDescription"
+    placeholder="Enter additional information about yourself"></textarea>
+</div>
+
+<button type="submit" class="btn">
+    Save Profile
+</button>
+
+</form>
+
+</div>
+
+
+<!-- VIEW PROFILE -->
+
+<div id="viewProfileContainer" style="display:none;">
+
+<div class="profile-card">
+
+<h3>My Profile Information</h3>
+
+<div class="profile-row">
+    <div class="profile-label">Full Name</div>
+    <div id="viewFullName"></div>
+</div>
+
+<div class="profile-row">
+    <div class="profile-label">Email</div>
+    <div id="viewEmail"></div>
+</div>
+
+<div class="profile-row">
+    <div class="profile-label">Phone</div>
+    <div id="viewPhone"></div>
+</div>
+
+<div class="profile-row">
+    <div class="profile-label">Address</div>
+    <div id="viewAddress"></div>
+</div>
+
+<div class="profile-row">
+    <div class="profile-label">Description</div>
+    <div id="viewDescription"></div>
+</div>
+
+<div class="profile-row">
+    <div class="profile-label">Created At</div>
+    <div id="viewCreatedAt"></div>
+</div>
+
+</div>
+
+<div class="button-row" style="margin-top:20px;">
+
+<button
+    type="button"
+    class="btn"
+    id="editProfileBtn">
+    Edit My Profile
+</button>
+
+<button
+    type="button"
+    class="btn btn-danger"
+    id="deleteProfileBtn">
+    Delete My Profile
+</button>
+
+</div>
+
+</div>
+
+
+<!-- EDIT PROFILE -->
+
+<div id="editProfileContainer" style="display:none;">
+
+<form id="editProfileForm">
+
+<div class="form-group">
+<label for="editFullName">Full Name *</label>
+<input
+    type="text"
+    id="editFullName"
+    required>
+</div>
+
+<div class="form-group">
+<label for="editAddress">Address *</label>
+<input
+    type="text"
+    id="editAddress"
+    required>
+</div>
+
+<div class="form-group">
+<label for="editPhone">Phone</label>
+<input
+    type="text"
+    id="editPhone">
+</div>
+
+<div class="form-group">
+<label for="editDescription">Description</label>
+<textarea
+    id="editDescription"></textarea>
+</div>
+
+<div class="button-row">
+
+<button
+    type="submit"
+    class="btn btn-success">
+    Save Changes
+</button>
+
+<button
+    type="button"
+    class="btn btn-secondary"
+    id="cancelEditBtn">
+    Cancel
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- NEEDS -->
+
+<section class="panel" id="needs">
+
+<div class="section">
+
+<h2>Submit Community Needs</h2>
+
+<p class="section-description">
+    Submit a community need that requires support from a volunteer.
+</p>
+
+<div id="needsMessage" class="message"></div>
+
+<form id="needsForm">
+
+<div class="form-group">
+<label for="needTitle">Need Title *</label>
+<input
+    type="text"
+    id="needTitle"
+    required
+    placeholder="Enter community need title">
+</div>
+
+<div class="form-group">
+<label for="needDescription">Description *</label>
+<textarea
+    id="needDescription"
+    required
+    placeholder="Describe the community need"></textarea>
+</div>
+
+<div class="form-group">
+<label for="requiredSkill">Required Skill *</label>
+
+<select id="requiredSkill" required>
+<option value="">Select required skill</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label for="needLocation">Location *</label>
+<input
+    type="text"
+    id="needLocation"
+    required
+    placeholder="Enter location">
+</div>
+
+<div class="form-group">
+<label for="urgency">Urgency *</label>
+
+<select id="urgency" required>
+<option value="">Select urgency</option>
+<option value="Low">Low</option>
+<option value="Medium">Medium</option>
+<option value="High">High</option>
+<option value="Critical">Critical</option>
+</select>
+
+</div>
+
+<button type="submit" class="btn">
+    Submit Community Need
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- ASSIGNED VOLUNTEER -->
+
+<section class="panel" id="assigned">
+
+<div class="section">
+
+<h2>View Assigned Volunteer</h2>
+
+<p class="section-description">
+    View volunteers assigned to your submitted community needs.
+</p>
+
+<div id="assignedContainer">
+
+<div class="empty">
+    Loading assigned volunteers...
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+
+<section class="panel" id="notifications">
+
+<div class="section">
+
+<h2>Notifications</h2>
+
+<p class="section-description">
+    View notifications related to your community needs and services.
+</p>
+
+<div id="notificationsContainer">
+
+<div class="empty">
+    Loading notifications...
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- FEEDBACK -->
+
+<section class="panel" id="feedback">
+
+<div class="section">
+
+<h2>Provide Feedback on Service</h2>
+
+<p class="section-description">
+    Provide feedback about the service received from the assigned volunteer.
+</p>
+
+<div id="feedbackMessage" class="message"></div>
+
+<div id="feedbackServices">
+
+<div class="empty">
+    Loading assigned services...
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+
+const API_BASE = "http://127.0.0.1:3000";
+
+const token = localStorage.getItem("cse_vms_token");
+
+if (!token) {
+    window.location.href = "/";
+}
+
+
+function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function getHeaders() {
+
+    return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+    };
+}
+
+
+function showMessage(elementId, message, type) {
+
+    const element = document.getElementById(elementId);
+
+    if (!element) {
+        return;
+    }
+
+    element.textContent = message;
+
+    element.className = "message " + type;
+}
+
+
+function getValue(obj, keys) {
+
+    for (const key of keys) {
+
+        if (
+            obj &&
+            obj[key] !== undefined &&
+            obj[key] !== null &&
+            obj[key] !== ""
+        ) {
+            return obj[key];
+        }
+
+    }
+
+    return "";
+}
+
+
+/* DATE */
+
+function loadCurrentDate() {
+
+    const dateElement =
+        document.getElementById("currentDate");
+
+    if (!dateElement) {
+        return;
+    }
+
+    const today = new Date();
+
+    dateElement.textContent =
+        today.toLocaleDateString(
+            "en-US",
+            {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }
+        );
+}
+
+
+/* NAVIGATION */
+
+function setupNavigation() {
+
+    const navItems =
+        document.querySelectorAll(
+            ".nav-item[data-panel]"
+        );
+
+    navItems.forEach(function(item) {
+
+        item.addEventListener(
+            "click",
+            function() {
+
+                const panelId =
+                    item.getAttribute("data-panel");
+
+                document
+                    .querySelectorAll(".panel")
+                    .forEach(function(panel) {
+
+                        panel.classList.remove("active");
+
+                    });
+
+                document
+                    .querySelectorAll(".nav-item")
+                    .forEach(function(nav) {
+
+                        nav.classList.remove("active");
+
+                    });
+
+                const targetPanel =
+                    document.getElementById(panelId);
+
+                if (targetPanel) {
+
+                    targetPanel.classList.add("active");
+
+                }
+
+                item.classList.add("active");
+
+
+                if (panelId === "profile") {
+                    loadMyProfile();
+                }
+
+                if (panelId === "assigned") {
+                    loadAssignedVolunteer();
+                }
+
+                if (panelId === "notifications") {
+                    loadNotifications();
+                }
+
+                if (panelId === "feedback") {
+                    loadFeedbackServices();
+                }
+
+                if (panelId === "needs") {
+                    loadSkills();
+                }
+
+            }
+        );
+
+    });
+
+}
+
+
+/* PROFILE */
+
+function showCreateProfile() {
+
+    const createContainer =
+        document.getElementById(
+            "createProfileContainer"
+        );
+
+    const viewContainer =
+        document.getElementById(
+            "viewProfileContainer"
+        );
+
+    const editContainer =
+        document.getElementById(
+            "editProfileContainer"
+        );
+
+    if (createContainer) {
+        createContainer.style.display = "block";
+    }
+
+    if (viewContainer) {
+        viewContainer.style.display = "none";
+    }
+
+    if (editContainer) {
+        editContainer.style.display = "none";
+    }
+
+}
+
+
+function showViewProfile() {
+
+    const createContainer =
+        document.getElementById(
+            "createProfileContainer"
+        );
+
+    const viewContainer =
+        document.getElementById(
+            "viewProfileContainer"
+        );
+
+    const editContainer =
+        document.getElementById(
+            "editProfileContainer"
+        );
+
+    if (createContainer) {
+        createContainer.style.display = "none";
+    }
+
+    if (viewContainer) {
+        viewContainer.style.display = "block";
+    }
+
+    if (editContainer) {
+        editContainer.style.display = "none";
+    }
+
+}
+
+
+function showEditProfile() {
+
+    const createContainer =
+        document.getElementById(
+            "createProfileContainer"
+        );
+
+    const viewContainer =
+        document.getElementById(
+            "viewProfileContainer"
+        );
+
+    const editContainer =
+        document.getElementById(
+            "editProfileContainer"
+        );
+
+    if (createContainer) {
+        createContainer.style.display = "none";
+    }
+
+    if (viewContainer) {
+        viewContainer.style.display = "none";
+    }
+
+    if (editContainer) {
+        editContainer.style.display = "block";
+    }
+
+}
+
+
+async function loadMyProfile() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE + "/api/community/profile",
+                {
+                    method: "GET",
+                    headers: getHeaders()
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to retrieve your profile."
+            );
+
+        }
+
+
+        if (
+            data.profileExists === true &&
+            data.profile
+        ) {
+
+            const profile =
+                data.profile;
+
+
+            document.getElementById(
+                "viewFullName"
+            ).textContent =
+                getValue(
+                    profile,
+                    ["full_name"]
+                );
+
+
+            document.getElementById(
+                "viewEmail"
+            ).textContent =
+                getValue(
+                    profile,
+                    ["email"]
+                );
+
+
+            document.getElementById(
+                "viewPhone"
+            ).textContent =
+                getValue(
+                    profile,
+                    ["profile_phone", "user_phone"]
+                ) || "Not provided";
+
+
+            document.getElementById(
+                "viewAddress"
+            ).textContent =
+                getValue(
+                    profile,
+                    ["address"]
+                );
+
+
+            document.getElementById(
+                "viewDescription"
+            ).textContent =
+                getValue(
+                    profile,
+                    ["description"]
+                ) || "Not provided";
+
+
+            let createdAt = getValue(
+                profile,
+                ["created_at"]
+            );
+
+            if (createdAt) {
+
+                createdAt =
+                    new Date(createdAt)
+                    .toLocaleString();
+
+            } else {
+
+                createdAt = "Not available";
+
+            }
+
+
+            document.getElementById(
+                "viewCreatedAt"
+            ).textContent =
+                createdAt;
+
+
+            document.getElementById(
+                "editFullName"
+            ).value =
+                getValue(
+                    profile,
+                    ["full_name"]
+                );
+
+
+            document.getElementById(
+                "editAddress"
+            ).value =
+                getValue(
+                    profile,
+                    ["address"]
+                );
+
+
+            document.getElementById(
+                "editPhone"
+            ).value =
+                getValue(
+                    profile,
+                    ["profile_phone", "user_phone"]
+                );
+
+
+            document.getElementById(
+                "editDescription"
+            ).value =
+                getValue(
+                    profile,
+                    ["description"]
+                );
+
+
+            showViewProfile();
+
+        } else {
+
+            showCreateProfile();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Load profile error:",
+            error
+        );
+
+        showMessage(
+            "profileMessage",
+            error.message ||
+            "Server error while retrieving your profile.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* CREATE PROFILE */
+
+function setupProfileForm() {
+
+    const form =
+        document.getElementById(
+            "profileForm"
+        );
+
+    if (!form) {
+        return;
+    }
+
+
+    form.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const fullName =
+                document
+                    .getElementById(
+                        "profileFullName"
+                    )
+                    .value
+                    .trim();
+
+
+            const address =
+                document
+                    .getElementById(
+                        "profileAddress"
+                    )
+                    .value
+                    .trim();
+
+
+            const phone =
+                document
+                    .getElementById(
+                        "profilePhone"
+                    )
+                    .value
+                    .trim();
+
+
+            const description =
+                document
+                    .getElementById(
+                        "profileDescription"
+                    )
+                    .value
+                    .trim();
+
+
+            if (!fullName || !address) {
+
+                showMessage(
+                    "profileMessage",
+                    "Full name and address are required.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        "/api/community/profile",
+                        {
+                            method: "POST",
+                            headers: getHeaders(),
+                            body: JSON.stringify({
+                                full_name: fullName,
+                                address: address,
+                                phone: phone,
+                                description: description
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Failed to create profile."
+                    );
+
+                }
+
+
+                showMessage(
+                    "profileMessage",
+                    data.message ||
+                    "Profile created successfully.",
+                    "success"
+                );
+
+
+                form.reset();
+
+                await loadMyProfile();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    "profileMessage",
+                    error.message ||
+                    "Server error while creating profile.",
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* EDIT PROFILE */
+
+function setupEditProfile() {
+
+    const form =
+        document.getElementById(
+            "editProfileForm"
+        );
+
+    const editButton =
+        document.getElementById(
+            "editProfileBtn"
+        );
+
+    const cancelButton =
+        document.getElementById(
+            "cancelEditBtn"
+        );
+
+
+    if (editButton) {
+
+        editButton.addEventListener(
+            "click",
+            function() {
+
+                showEditProfile();
+
+            }
+        );
+
+    }
+
+
+    if (cancelButton) {
+
+        cancelButton.addEventListener(
+            "click",
+            function() {
+
+                showViewProfile();
+
+            }
+        );
+
+    }
+
+
+    if (!form) {
+        return;
+    }
+
+
+    form.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const fullName =
+                document
+                    .getElementById(
+                        "editFullName"
+                    )
+                    .value
+                    .trim();
+
+
+            const address =
+                document
+                    .getElementById(
+                        "editAddress"
+                    )
+                    .value
+                    .trim();
+
+
+            const phone =
+                document
+                    .getElementById(
+                        "editPhone"
+                    )
+                    .value
+                    .trim();
+
+
+            const description =
+                document
+                    .getElementById(
+                        "editDescription"
+                    )
+                    .value
+                    .trim();
+
+
+            if (!fullName || !address) {
+
+                showMessage(
+                    "profileMessage",
+                    "Full name and address are required.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        "/api/community/profile",
+                        {
+                            method: "PUT",
+                            headers: getHeaders(),
+                            body: JSON.stringify({
+                                full_name: fullName,
+                                address: address,
+                                phone: phone,
+                                description: description
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Failed to update profile."
+                    );
+
+                }
+
+
+                showMessage(
+                    "profileMessage",
+                    data.message ||
+                    "Profile updated successfully.",
+                    "success"
+                );
+
+
+                await loadMyProfile();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    "profileMessage",
+                    error.message ||
+                    "Server error while updating profile.",
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* DELETE PROFILE */
+
+function setupDeleteProfile() {
+
+    const button =
+        document.getElementById(
+            "deleteProfileBtn"
+        );
+
+    if (!button) {
+        return;
+    }
+
+
+    button.addEventListener(
+        "click",
+        async function() {
+
+            const confirmed =
+                window.confirm(
+                    "Are you sure you want to delete your community member profile? Your Community Member account will NOT be deleted."
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        "/api/community/profile",
+                        {
+                            method: "DELETE",
+                            headers: getHeaders()
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Failed to delete profile."
+                    );
+
+                }
+
+
+                showMessage(
+                    "profileMessage",
+                    data.message ||
+                    "Profile deleted successfully.",
+                    "success"
+                );
+
+
+                showCreateProfile();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    "profileMessage",
+                    error.message ||
+                    "Server error while deleting profile.",
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* SKILLS */
+
+async function loadSkills() {
+
+    const select =
+        document.getElementById(
+            "requiredSkill"
+        );
+
+    if (!select) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/community/skills",
+                {
+                    headers: getHeaders()
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to retrieve skills."
+            );
+
+        }
+
+
+        const skills =
+            Array.isArray(data)
+                ? data
+                : (
+                    Array.isArray(data.skills)
+                        ? data.skills
+                        : []
+                );
+
+
+        select.innerHTML =
+            '<option value="">Select required skill</option>';
+
+
+        skills.forEach(
+            function(skill) {
+
+                const id =
+                    getValue(
+                        skill,
+                        ["id", "skill_id"]
+                    );
+
+
+                const name =
+                    getValue(
+                        skill,
+                        ["skill_name", "name"]
+                    );
+
+
+                if (id && name) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value = id;
+
+                    option.textContent = name;
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        select.innerHTML =
+            '<option value="">Unable to load skills</option>';
+
+    }
+
+}
+
+
+/* COMMUNITY NEEDS */
+
+function setupNeedsForm() {
+
+    const form =
+        document.getElementById(
+            "needsForm"
+        );
+
+    if (!form) {
+        return;
+    }
+
+
+    form.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const title =
+                document
+                    .getElementById(
+                        "needTitle"
+                    )
+                    .value
+                    .trim();
+
+
+            const description =
+                document
+                    .getElementById(
+                        "needDescription"
+                    )
+                    .value
+                    .trim();
+
+
+            const requiredSkillId =
+                document
+                    .getElementById(
+                        "requiredSkill"
+                    )
+                    .value;
+
+
+            const location =
+                document
+                    .getElementById(
+                        "needLocation"
+                    )
+                    .value
+                    .trim();
+
+
+            const urgency =
+                document
+                    .getElementById(
+                        "urgency"
+                    )
+                    .value;
+
+
+            if (
+                !title ||
+                !description ||
+                !requiredSkillId ||
+                !location ||
+                !urgency
+            ) {
+
+                showMessage(
+                    "needsMessage",
+                    "Please complete all required fields.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        "/api/community/needs",
+                        {
+                            method: "POST",
+                            headers: getHeaders(),
+                            body: JSON.stringify({
+                                title: title,
+                                description: description,
+                                required_skill_id:
+                                    Number(requiredSkillId),
+                                location: location,
+                                urgency: urgency
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Failed to submit community need."
+                    );
+
+                }
+
+
+                showMessage(
+                    "needsMessage",
+                    data.message ||
+                    "Community need submitted successfully.",
+                    "success"
+                );
+
+
+                form.reset();
+
+                loadDashboardCounts();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    "needsMessage",
+                    error.message ||
+                    "Server error while submitting community need.",
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ASSIGNED VOLUNTEER */
+
+async function loadAssignedVolunteer() {
+
+    const container =
+        document.getElementById(
+            "assignedContainer"
+        );
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML =
+        '<div class="empty">Loading assigned volunteers...</div>';
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/community/assigned-volunteer",
+                {
+                    headers: getHeaders()
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to retrieve assigned volunteers."
+            );
+
+        }
+
+
+        const assignments =
+            Array.isArray(data)
+                ? data
+                : (
+                    Array.isArray(data.assignments)
+                        ? data.assignments
+                        : (
+                            Array.isArray(data.volunteers)
+                                ? data.volunteers
+                                : []
+                        )
+                );
+
+
+        if (assignments.length === 0) {
+
+            container.innerHTML =
+                '<div class="empty">No volunteer has been assigned to your community needs yet.</div>';
+
+            return;
+        }
+
+
+        container.innerHTML =
+            assignments
+                .map(
+                    function(item) {
+
+                        const volunteerName =
+                            getValue(
+                                item,
+                                [
+                                    "volunteer_name",
+                                    "name",
+                                    "full_name"
+                                ]
+                            ) ||
+                            "Volunteer";
+
+
+                        const skillName =
+                            getValue(
+                                item,
+                                [
+                                    "skill_name",
+                                    "skill"
+                                ]
+                            ) ||
+                            "Not specified";
+
+
+                        const needTitle =
+                            getValue(
+                                item,
+                                [
+                                    "need_title",
+                                    "title"
+                                ]
+                            ) ||
+                            "Community Need";
+
+
+                        const location =
+                            getValue(
+                                item,
+                                ["location"]
+                            ) ||
+                            "Not specified";
+
+
+                        const status =
+                            getValue(
+                                item,
+                                [
+                                    "status",
+                                    "assignment_status"
+                                ]
+                            ) ||
+                            "Assigned";
+
+
+                        return `
+                        <div class="volunteer-box">
+
+                            <h3>
+                                ${escapeHtml(volunteerName)}
+                            </h3>
+
+                            <p>
+                                <strong>Community Need:</strong>
+                                ${escapeHtml(needTitle)}
+                            </p>
+
+                            <p>
+                                <strong>Skill:</strong>
+                                ${escapeHtml(skillName)}
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                ${escapeHtml(location)}
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                ${escapeHtml(status)}
+                            </p>
+
+                        </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            '<div class="message error" style="display:block;">' +
+            escapeHtml(
+                error.message ||
+                "Server error while retrieving assigned volunteer."
+            ) +
+            "</div>";
+
+    }
+
+}
+
+
+/* NOTIFICATIONS */
+
+async function loadNotifications() {
+
+    const container =
+        document.getElementById(
+            "notificationsContainer"
+        );
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML =
+        '<div class="empty">Loading notifications...</div>';
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/notifications",
+                {
+                    headers: getHeaders()
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to retrieve notifications."
+            );
+
+        }
+
+
+        const notifications =
+            Array.isArray(data)
+                ? data
+                : (
+                    Array.isArray(data.notifications)
+                        ? data.notifications
+                        : []
+                );
+
+
+        if (notifications.length === 0) {
+
+            container.innerHTML =
+                '<div class="empty">No notifications available.</div>';
+
+            return;
+        }
+
+
+        container.innerHTML =
+            notifications
+                .map(
+                    function(item) {
+
+                        const title =
+                            getValue(
+                                item,
+                                [
+                                    "title",
+                                    "notification_title"
+                                ]
+                            ) ||
+                            "Notification";
+
+
+                        const message =
+                            getValue(
+                                item,
+                                [
+                                    "message",
+                                    "description",
+                                    "notification_message"
+                                ]
+                            ) ||
+                            "";
+
+
+                        const createdAt =
+                            getValue(
+                                item,
+                                [
+                                    "created_at",
+                                    "date"
+                                ]
+                            );
+
+
+                        let dateText = "";
+
+
+                        if (createdAt) {
+
+                            dateText =
+                                new Date(
+                                    createdAt
+                                )
+                                .toLocaleString();
+
+                        }
+
+
+                        return `
+                        <div class="notification">
+
+                            <h3>
+                                ${escapeHtml(title)}
+                            </h3>
+
+                            <p>
+                                ${escapeHtml(message)}
+                            </p>
+
+                            ${
+                                dateText
+                                    ? `
+                                    <div class="small">
+                                        ${escapeHtml(dateText)}
+                                    </div>
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            '<div class="message error" style="display:block;">' +
+            escapeHtml(
+                error.message ||
+                "Server error while retrieving notifications."
+            ) +
+            "</div>";
+
+    }
+
+}
+
+
+/* FEEDBACK */
+
+async function loadFeedbackServices() {
+
+    const container =
+        document.getElementById(
+            "feedbackServices"
+        );
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML =
+        '<div class="empty">Loading assigned services...</div>';
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/feedback/services",
+                {
+                    headers: getHeaders()
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to retrieve services."
+            );
+
+        }
+
+
+        const services =
+            Array.isArray(data)
+                ? data
+                : (
+                    Array.isArray(data.services)
+                        ? data.services
+                        : []
+                );
+
+
+        if (services.length === 0) {
+
+            container.innerHTML =
+                '<div class="empty">No assigned service is available for feedback yet.</div>';
+
+            return;
+        }
+
+
+        container.innerHTML =
+            services
+                .map(
+                    function(service, index) {
+
+                        const assignmentId =
+                            getValue(
+                                service,
+                                ["assignment_id"]
+                            );
+
+
+                        const needTitle =
+                            getValue(
+                                service,
+                                [
+                                    "need_title",
+                                    "title"
+                                ]
+                            ) ||
+                            "Community Service";
+
+
+                        const description =
+                            getValue(
+                                service,
+                                [
+                                    "need_description",
+                                    "description"
+                                ]
+                            ) ||
+                            "No description available.";
+
+
+                        const volunteerName =
+                            getValue(
+                                service,
+                                [
+                                    "volunteer_name",
+                                    "provider_name",
+                                    "name"
+                                ]
+                            ) ||
+                            "Volunteer";
+
+
+                        const existingFeedbackId =
+                            getValue(
+                                service,
+                                ["feedback_id"]
+                            );
+
+
+                        const existingRating =
+                            getValue(
+                                service,
+                                [
+                                    "rating",
+                                    "feedback_rating"
+                                ]
+                            );
+
+
+                        const existingComment =
+                            getValue(
+                                service,
+                                [
+                                    "comment",
+                                    "feedback_comment"
+                                ]
+                            );
+
+
+                        if (existingFeedbackId) {
+
+                            return `
+                            <div class="feedback-card">
+
+                                <h3>
+                                    ${escapeHtml(needTitle)}
+                                </h3>
+
+                                <p>
+                                    <strong>Service Description:</strong>
+                                    ${escapeHtml(description)}
+                                </p>
+
+                                <p>
+                                    <strong>Service Provider:</strong>
+                                    ${escapeHtml(volunteerName)}
+                                </p>
+
+                                <div class="submitted">
+                                    Feedback Submitted
+                                    ${
+                                        existingRating
+                                            ? " - Rating: " +
+                                              escapeHtml(existingRating) +
+                                              "/5"
+                                            : ""
+                                    }
+                                </div>
+
+                                ${
+                                    existingComment
+                                        ? `
+                                        <p style="margin-top:12px;">
+                                            <strong>Your Feedback:</strong>
+                                            ${escapeHtml(existingComment)}
+                                        </p>
+                                        `
+                                        : ""
+                                }
+
+                            </div>
+                            `;
+
+                        }
+
+
+                        return `
+                        <div class="feedback-card">
+
+                            <h3>
+                                ${escapeHtml(needTitle)}
+                            </h3>
+
+                            <p>
+                                <strong>Service Description:</strong>
+                                ${escapeHtml(description)}
+                            </p>
+
+                            <p>
+                                <strong>Service Provider:</strong>
+                                ${escapeHtml(volunteerName)}
+                            </p>
+
+                            <form
+                                class="feedback-form"
+                                data-assignment-id="${escapeHtml(assignmentId)}"
+                                data-index="${index}">
+
+                                <div class="form-group">
+
+                                    <label for="rating-${index}">
+                                        Service Rating *
+                                    </label>
+
+                                    <select
+                                        id="rating-${index}"
+                                        name="rating"
+                                        required>
+
+                                        <option value="">
+                                            Select rating
+                                        </option>
+
+                                        <option value="1">
+                                            1 - Very Poor
+                                        </option>
+
+                                        <option value="2">
+                                            2 - Poor
+                                        </option>
+
+                                        <option value="3">
+                                            3 - Average
+                                        </option>
+
+                                        <option value="4">
+                                            4 - Good
+                                        </option>
+
+                                        <option value="5">
+                                            5 - Excellent
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="comment-${index}">
+                                        Enter Your Feedback About the Service Provider
+                                    </label>
+
+                                    <textarea
+                                        id="comment-${index}"
+                                        name="comment"
+                                        class="feedback-textarea"
+                                        placeholder="Enter your feedback about the service provider..."></textarea>
+
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-success">
+                                    Submit Feedback
+                                </button>
+
+                            </form>
+
+                        </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+
+        setupFeedbackForms();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            '<div class="message error" style="display:block;">' +
+            escapeHtml(
+                error.message ||
+                "Server error while retrieving feedback services."
+            ) +
+            "</div>";
+
+    }
+
+}
+
+
+/* FEEDBACK SUBMISSION */
+
+function setupFeedbackForms() {
+
+    document
+        .querySelectorAll(".feedback-form")
+        .forEach(
+            function(form) {
+
+                form.addEventListener(
+                    "submit",
+                    async function(event) {
+
+                        event.preventDefault();
+
+
+                        const assignmentId =
+                            form.getAttribute(
+                                "data-assignment-id"
+                            );
+
+
+                        const rating =
+                            form
+                                .querySelector(
+                                    '[name="rating"]'
+                                )
+                                .value;
+
+
+                        const comment =
+                            form
+                                .querySelector(
+                                    '[name="comment"]'
+                                )
+                                .value
+                                .trim();
+
+
+                        if (!assignmentId) {
+
+                            alert(
+                                "Assignment information is missing."
+                            );
+
+                            return;
+                        }
+
+
+                        if (!rating) {
+
+                            alert(
+                                "Please select a service rating."
+                            );
+
+                            return;
+                        }
+
+
+                        try {
+
+                            const response =
+                                await fetch(
+                                    API_BASE +
+                                    "/api/feedback",
+                                    {
+                                        method: "POST",
+                                        headers: getHeaders(),
+                                        body:
+                                            JSON.stringify({
+                                                assignment_id:
+                                                    Number(
+                                                        assignmentId
+                                                    ),
+                                                rating:
+                                                    Number(
+                                                        rating
+                                                    ),
+                                                comment:
+                                                    comment
+                                            })
+                                    }
+                                );
+
+
+                            const data =
+                                await response.json();
+
+
+                            if (!response.ok) {
+
+                                throw new Error(
+                                    data.message ||
+                                    "Failed to submit feedback."
+                                );
+
+                            }
+
+
+                            showMessage(
+                                "feedbackMessage",
+                                data.message ||
+                                "Feedback submitted successfully.",
+                                "success"
+                            );
+
+
+                            await loadFeedbackServices();
+
+
+                        } catch (error) {
+
+                            console.error(error);
+
+                            showMessage(
+                                "feedbackMessage",
+                                error.message ||
+                                "Server error while submitting feedback.",
+                                "error"
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+/* DASHBOARD COUNTS */
+
+async function loadDashboardCounts() {
+
+    try {
+
+        const assignedResponse =
+            await fetch(
+                API_BASE +
+                "/api/community/assigned-volunteer",
+                {
+                    headers: getHeaders()
+                }
+            );
+
+
+        if (assignedResponse.ok) {
+
+            const assignedData =
+                await assignedResponse.json();
+
+
+            const assignments =
+                Array.isArray(assignedData)
+                    ? assignedData
+                    : (
+                        Array.isArray(
+                            assignedData.assignments
+                        )
+                            ? assignedData.assignments
+                            : []
+                    );
+
+
+            const volunteerCount =
+                document.getElementById(
+                    "volunteerCount"
+                );
+
+
+            if (volunteerCount) {
+
+                volunteerCount.textContent =
+                    assignments.length;
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard volunteer count error:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        const feedbackResponse =
+            await fetch(
+                API_BASE +
+                "/api/feedback/services",
+                {
+                    headers: getHeaders()
+                }
+            );
+
+
+        if (feedbackResponse.ok) {
+
+            const feedbackData =
+                await feedbackResponse.json();
+
+
+            const services =
+                Array.isArray(feedbackData)
+                    ? feedbackData
+                    : (
+                        Array.isArray(
+                            feedbackData.services
+                        )
+                            ? feedbackData.services
+                            : []
+                    );
+
+
+            const uniqueNeeds =
+                new Set();
+
+
+            services.forEach(
+                function(service) {
+
+                    const needId =
+                        getValue(
+                            service,
+                            [
+                                "need_id",
+                                "community_need_id"
+                            ]
+                        );
+
+
+                    if (needId) {
+
+                        uniqueNeeds.add(
+                            String(needId)
+                        );
+
+                    }
+
+                }
+            );
+
+
+            const needsCount =
+                document.getElementById(
+                    "needsCount"
+                );
+
+
+            if (needsCount) {
+
+                if (uniqueNeeds.size > 0) {
+
+                    needsCount.textContent =
+                        uniqueNeeds.size;
+
+                } else {
+
+                    needsCount.textContent =
+                        services.length;
+
+                }
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard needs count error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* LOGOUT */
+
+function setupLogout() {
+
+    const logoutBtn =
+        document.getElementById(
+            "logoutBtn"
+        );
+
+    if (!logoutBtn) {
+        return;
+    }
+
+
+    logoutBtn.addEventListener(
+        "click",
+        function() {
+
+            localStorage.removeItem(
+                "cse_vms_token"
+            );
+
+            window.location.href = "/";
+
+        }
+    );
+
+}
+
+
+/* INITIALIZATION */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadCurrentDate();
+
+        setupNavigation();
+
+        setupProfileForm();
+
+        setupEditProfile();
+
+        setupDeleteProfile();
+
+        setupNeedsForm();
+
+        setupLogout();
+
+        loadDashboardCounts();
+
+        loadSkills();
+
+        loadMyProfile();
+
+        loadAssignedVolunteer();
+
+        loadNotifications();
+
+        loadFeedbackServices();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

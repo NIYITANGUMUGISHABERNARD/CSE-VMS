@@ -1,0 +1,1788 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE-VMS | Coordinator Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #1f2937;
+            color: white;
+            padding: 20px 0;
+        }
+
+        .logo {
+            padding: 0 20px 25px;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #374151;
+        }
+
+        .role {
+            padding: 12px 20px;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 20px;
+            color: #d1d5db;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #374151;
+            color: white;
+        }
+
+        .logout {
+            color: #fca5a5;
+            margin-top: 20px;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+        .header p {
+            color: #6b7280;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+
+        .card-title {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .card-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+
+        .section h2 {
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            padding: 11px 17px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .table-actions,
+        .decision-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+
+        .table-actions button,
+        .decision-actions button {
+            flex: 0 0 auto;
+            padding: 8px 12px;
+            margin: 0;
+        }
+
+        .decision-actions button {
+            min-width: 75px;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 20px;
+            padding: 13px;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #6b7280;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .assigned {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .accepted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .info {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1000px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">CSE-VMS</div>
+
+        <div class="role">
+            Coordinator Dashboard
+        </div>
+
+        <a href="#dashboard" class="nav-item active">
+            Dashboard
+        </a>
+
+        <a href="#volunteers" class="nav-item">
+            Review Volunteer Skills
+        </a>
+
+        <a href="#needs" class="nav-item">
+            Review Community Needs
+        </a>
+
+        <a href="#matching" class="nav-item">
+            Match Volunteers
+        </a>
+
+        <a href="#assignments" class="nav-item">
+            Assignment Review
+        </a>
+
+        <a href="#participation" class="nav-item">
+            Participation
+        </a>
+
+        <a href="#" class="nav-item logout" onclick="logout()">
+            Logout
+        </a>
+    </aside>
+
+    <main class="main">
+
+        <div id="message" class="message"></div>
+
+        <header class="header" id="dashboard">
+            <h1>Coordinator Dashboard</h1><p>Welcome, <strong id="coordinatorName">Coordinator</strong>. Manage volunteer skills, community needs, matching and assignments.</p>
+            <p>
+                Manage volunteer skills, community needs, matching and assignments.
+            </p>
+        </header>
+
+        <section class="cards">
+
+            <div class="card">
+                <div class="card-title">
+                    Registered Volunteers
+                </div>
+
+                <div class="card-number" id="volunteerCount">
+                    0
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Community Needs
+                </div>
+
+                <div class="card-number" id="needCount">
+                    0
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Assignments
+                </div>
+
+                <div class="card-number" id="assignmentCount">
+                    0
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Participation
+                </div>
+
+                <div class="card-number" id="participationCount">
+                    0
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 1. REVIEW VOLUNTEER SKILLS -->
+
+        <section class="section" id="volunteers">
+
+            <h2>
+                1. Review Volunteer Skills
+            </h2>
+
+            <p class="section-description">
+                Review registered volunteers and their skills.
+            </p>
+
+            <div class="actions">
+                <button class="btn-primary" onclick="viewVolunteers()">
+                    View Volunteer Skills
+                </button>
+            </div>
+
+            <div id="volunteerResults"></div>
+
+        </section>
+
+        <!-- 2. REVIEW COMMUNITY NEEDS -->
+
+        <section class="section" id="needs">
+
+            <h2>
+                2. Review Community Member Needs
+            </h2>
+
+            <p class="section-description">
+                Review community needs submitted through the system.
+            </p>
+
+            <div class="actions">
+                <button class="btn-primary" onclick="viewNeeds()">
+                    View Community Needs
+                </button>
+            </div>
+
+            <div id="needsResults"></div>
+
+        </section>
+
+        <!-- 3. MATCHING -->
+
+        <section class="section" id="matching">
+
+            <h2>
+                3. Match Volunteers with Community Needs
+            </h2>
+
+            <p class="section-description">
+                Match suitable volunteers with community needs according to their skills.
+            </p>
+
+            <div class="actions">
+                <button class="btn-primary" onclick="loadMatchingData()">
+                    Load Matching Information
+                </button>
+            </div>
+
+            <div id="matchingResults"></div>
+
+        </section>
+
+        <!-- 4. ASSIGNMENTS -->
+
+        <section class="section" id="assignments">
+
+            <h2>
+                4. Approve or Reject Volunteer Assignments
+            </h2>
+
+            <p class="section-description">
+                Review assignments and approve or reject pending assignments.
+            </p>
+
+            <div class="actions">
+
+                <button class="btn-primary" onclick="viewAssignments()">
+                    View Assignments
+                </button>
+
+                <button class="btn-secondary" onclick="viewAssignments()">
+                    Refresh
+                </button>
+
+            </div>
+
+            <div id="assignmentResults"></div>
+
+        </section>
+
+        <!-- PARTICIPATION -->
+
+        <section class="section" id="participation">
+
+            <h2>
+                Participation
+            </h2>
+
+            <p class="section-description">
+                View accepted volunteer assignments for participation tracking.
+            </p>
+
+            <div class="actions">
+
+                <button class="btn-primary" onclick="viewParticipation()">
+                    View Participation
+                </button>
+
+            </div>
+
+            <div id="participationResults"></div>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        /* =========================
+           AUTHENTICATION
+        ========================= */
+
+        const token = localStorage.getItem("cse_vms_token");
+
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+        const coordinatorNameElement = document.getElementById("coordinatorName");
+
+        if (coordinatorNameElement && user.full_name) {
+            coordinatorNameElement.textContent = user.full_name;
+        }
+
+        if (!token) {
+            window.location.href = "index.html";
+        }
+
+
+        /* =========================
+           API REQUEST
+        ========================= */
+
+        async function apiRequest(url, options = {}) {
+
+            options.headers = {
+                "Content-Type": "application/json",
+                ...(options.headers || {}),
+                "Authorization": "Bearer " + token
+            };
+
+            const response = await fetch(url, options);
+
+            const data = await response
+                .json()
+                .catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Server request failed."
+                );
+            }
+
+            return data;
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        function showMessage(message, type = "success") {
+
+            const box = document.getElementById("message");
+
+            box.textContent = message;
+
+            box.className = "message " + type;
+
+            box.style.display = "block";
+
+            setTimeout(() => {
+                box.style.display = "none";
+            }, 4000);
+        }
+
+
+        /* =========================
+           ESCAPE HTML
+        ========================= */
+
+        function escapeHtml(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        async function loadDashboard() {
+
+            try {
+
+                const volunteers =
+                    await apiRequest(
+                        "/api/coordinator/volunteers"
+                    );
+
+                const volunteerList =
+                    volunteers.data ||
+                    volunteers.volunteers ||
+                    volunteers;
+
+                if (Array.isArray(volunteerList)) {
+
+                    document.getElementById(
+                        "volunteerCount"
+                    ).textContent =
+                        volunteerList.length;
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Volunteer count:",
+                    error
+                );
+            }
+
+
+            try {
+
+                const needs =
+                    await apiRequest(
+                        "/api/coordinator/needs"
+                    );
+
+                const needList =
+                    needs.data ||
+                    needs.needs ||
+                    needs;
+
+                if (Array.isArray(needList)) {
+
+                    document.getElementById(
+                        "needCount"
+                    ).textContent =
+                        needList.length;
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Need count:",
+                    error
+                );
+            }
+
+
+            try {
+
+                const assignments =
+                    await apiRequest(
+                        "/api/coordinator/assignments"
+                    );
+
+                const assignmentList =
+                    assignments.data ||
+                    assignments.assignments ||
+                    assignments;
+
+                if (Array.isArray(assignmentList)) {
+
+                    document.getElementById(
+                        "assignmentCount"
+                    ).textContent =
+                        assignmentList.length;
+
+                    document.getElementById(
+                        "participationCount"
+                    ).textContent =
+                        assignmentList.filter(
+                            item =>
+                                item.status === "Accepted"
+                        ).length;
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Assignment count:",
+                    error
+                );
+            }
+        }
+
+
+        /* =========================
+           REVIEW VOLUNTEER SKILLS
+        ========================= */
+
+        async function viewVolunteers() {
+
+            const container =
+                document.getElementById("volunteerResults");
+
+            container.innerHTML =
+                "Loading volunteer profiles and skills...";
+
+            try {
+
+                const result =
+                    await apiRequest(
+                        "/api/coordinator/volunteers"
+                    );
+
+                const volunteers =
+                    result.data ||
+                    result.volunteers ||
+                    result;
+
+                if (
+                    !Array.isArray(volunteers) ||
+                    volunteers.length === 0
+                ) {
+                    container.innerHTML =
+                        '<div class="empty">No volunteer profiles found.</div>';
+                    return;
+                }
+
+                const grouped = {};
+
+                volunteers.forEach(v => {
+
+                    const id =
+                        v.volunteer_id ||
+                        v.id;
+
+                    if (!grouped[id]) {
+
+                        grouped[id] = {
+                            volunteer_id: id,
+                            full_name:
+                                v.full_name || "-",
+                            email:
+                                v.email || "-",
+                            phone:
+                                v.phone || "-",
+                            gender:
+                                v.gender || "-",
+                            date_of_birth:
+                                v.date_of_birth || "-",
+                            district:
+                                v.district || "-",
+                            bio:
+                                v.bio || "-",
+                            location:
+                                v.volunteer_location ||
+                                v.location ||
+                                "-",
+                            availability:
+                                v.availability ||
+                                "-",
+                            skills: []
+                        };
+                    }
+
+                    if (v.skill_name) {
+
+                        grouped[id].skills.push({
+                            name:
+                                v.skill_name,
+                            experience:
+                                v.experience_level ||
+                                "-",
+                            description:
+                                v.skill_description ||
+                                "-"
+                        });
+                    }
+                });
+
+                const profiles =
+                    Object.values(grouped);
+
+                let html =
+                    '<div class="table-container">' +
+                    '<table class="volunteer-profile-skills-table">' +
+
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>ID</th>' +
+                    '<th>Volunteer Profile</th>' +
+                    '<th>Skill Name</th>' +
+                    '<th>Experience Level</th>' +
+                    '<th>Skill Description</th>' +
+                    '</tr>' +
+                    '</thead>' +
+
+                    '<tbody>';
+
+                profiles.forEach(v => {
+
+                    if (v.skills.length > 0) {
+
+                        v.skills.forEach(skill => {
+
+                            html +=
+                                '<tr>' +
+
+                                '<td class="profile-id">' +
+                                escapeHtml(
+                                    String(v.volunteer_id)
+                                ) +
+                                '</td>' +
+
+                                '<td class="profile-cell">' +
+
+                                '<div class="profile-item">' +
+                                '<strong>Name:</strong> ' +
+                                escapeHtml(v.full_name) +
+                                '</div>' +
+
+                                '<div class="profile-item">' +
+                                '<strong>Email:</strong> ' +
+                                escapeHtml(v.email) +
+                                '</div>' +
+
+                                '<div class="profile-item">' +
+                                '<strong>Phone:</strong> ' +
+                                escapeHtml(v.phone) +
+                                '</div>' +
+
+                                '<div class="profile-item">' +
+                                '<strong>Gender:</strong> ' +
+                                escapeHtml(v.gender) +
+                                '</div>' +
+
+                                '<div class="profile-item">' +
+                                '<strong>Date of Birth:</strong> ' +
+                                escapeHtml(v.date_of_birth) +
+                                '</div>' +
+
+                                '<div class="profile-item">' +
+                                '<strong>District:</strong> ' +
+                                escapeHtml(v.district) +
+                                '</div>' +
+
+                                '<div class="profile-item profile-bio">' +
+                                '<strong>Bio:</strong><br>' +
+                                escapeHtml(v.bio) +
+                                '</div>' +
+
+                                '<div class="profile-item">' +
+                                '<strong>Location:</strong> ' +
+                                escapeHtml(v.location) +
+                                '</div>' +
+
+                                '<div class="profile-item">' +
+                                '<strong>Availability:</strong> ' +
+                                escapeHtml(v.availability) +
+                                '</div>' +
+
+                                '</td>' +
+
+                                '<td class="skill-name-cell">' +
+                                '<strong>' +
+                                escapeHtml(skill.name) +
+                                '</strong>' +
+                                '</td>' +
+
+                                '<td>' +
+                                escapeHtml(skill.experience) +
+                                '</td>' +
+
+                                '<td class="skill-description-cell">' +
+                                escapeHtml(skill.description) +
+                                '</td>' +
+
+                                '</tr>';
+                        });
+
+                    } else {
+
+                        html +=
+                            '<tr>' +
+
+                            '<td class="profile-id">' +
+                            escapeHtml(
+                                String(v.volunteer_id)
+                            ) +
+                            '</td>' +
+
+                            '<td class="profile-cell">' +
+
+                            '<div class="profile-item">' +
+                            '<strong>Name:</strong> ' +
+                            escapeHtml(v.full_name) +
+                            '</div>' +
+
+                            '<div class="profile-item">' +
+                            '<strong>Email:</strong> ' +
+                            escapeHtml(v.email) +
+                            '</div>' +
+
+                            '<div class="profile-item">' +
+                            '<strong>Phone:</strong> ' +
+                            escapeHtml(v.phone) +
+                            '</div>' +
+
+                            '<div class="profile-item">' +
+                            '<strong>Gender:</strong> ' +
+                            escapeHtml(v.gender) +
+                            '</div>' +
+
+                            '<div class="profile-item">' +
+                            '<strong>Date of Birth:</strong> ' +
+                            escapeHtml(v.date_of_birth) +
+                            '</div>' +
+
+                            '<div class="profile-item">' +
+                            '<strong>District:</strong> ' +
+                            escapeHtml(v.district) +
+                            '</div>' +
+
+                            '<div class="profile-item profile-bio">' +
+                            '<strong>Bio:</strong><br>' +
+                            escapeHtml(v.bio) +
+                            '</div>' +
+
+                            '<div class="profile-item">' +
+                            '<strong>Location:</strong> ' +
+                            escapeHtml(v.location) +
+                            '</div>' +
+
+                            '<div class="profile-item">' +
+                            '<strong>Availability:</strong> ' +
+                            escapeHtml(v.availability) +
+                            '</div>' +
+
+                            '</td>' +
+
+                            '<td>-</td>' +
+                            '<td>-</td>' +
+                            '<td>-</td>' +
+
+                            '</tr>';
+                    }
+                });
+
+                html +=
+                    '</tbody>' +
+                    '</table>' +
+                    '</div>';
+
+                container.innerHTML = html;
+
+            } catch (error) {
+
+                console.error(
+                    "View volunteer profiles and skills error:",
+                    error
+                );
+
+                container.innerHTML = "";
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+
+
+
+        
+
+
+        /* =========================
+           REVIEW COMMUNITY NEEDS
+        ========================= */
+
+        async function viewNeeds() {
+
+            const container =
+                document.getElementById(
+                    "needsResults"
+                );
+
+            container.innerHTML =
+                "Loading community needs...";
+
+            try {
+
+                const result =
+                    await apiRequest(
+                        "/api/coordinator/needs"
+                    );
+
+                const needs =
+                    result.data ||
+                    result.needs ||
+                    result;
+
+                if (
+                    !Array.isArray(needs) ||
+                    needs.length === 0
+                ) {
+
+                    container.innerHTML =
+                        '<div class="empty">No community needs found.</div>';
+
+                    return;
+                }
+
+
+                let html = `
+                    <div class="table-container">
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Community Member</th><th>Email</th><th>Need</th>
+                                    <th>Description</th>
+                                    <th>Required Skill</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                `;
+
+
+                needs.forEach(n => {
+
+                    html += `
+                        <tr>
+
+                            <td>
+                                ${escapeHtml(
+                                    n.id
+                                )}
+                            </td><td>${escapeHtml(n.community_member_name || "-")}</td><td>${escapeHtml(n.community_member_email || "-")}</td>
+
+                            <td>
+                                ${escapeHtml(
+                                    n.title ||
+                                    n.need_title ||
+                                    n.need_name ||
+                                    "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    n.description ||
+                                    n.details ||
+                                    "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    n.skill_name ||
+                                    n.required_skill ||
+                                    "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    n.status ||
+                                    "-"
+                                )}
+                            </td>
+
+                        </tr>
+                    `;
+                });
+
+
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                container.innerHTML = html;
+
+            } catch (error) {
+
+                container.innerHTML = "";
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        /* =========================
+           MATCHING
+        ========================= */
+
+        async function loadMatchingData() {
+
+            const container =
+                document.getElementById(
+                    "matchingResults"
+                );
+
+            container.innerHTML =
+                "Loading matching information...";
+
+            try {
+
+                const [
+                    volunteerResult,
+                    needResult
+                ] = await Promise.all([
+
+                    apiRequest(
+                        "/api/coordinator/volunteers"
+                    ),
+
+                    apiRequest(
+                        "/api/coordinator/needs"
+                    )
+                ]);
+
+                const volunteers =
+                    volunteerResult.data ||
+                    volunteerResult.volunteers ||
+                    volunteerResult;
+
+                const needs =
+                    needResult.data ||
+                    needResult.needs ||
+                    needResult;
+
+                if (
+                    !Array.isArray(needs) ||
+                    needs.length === 0
+                ) {
+
+                    container.innerHTML =
+                        '<div class="empty">No community needs available for matching.</div>';
+
+                    return;
+                }
+
+                let html = `
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Community Member</th>
+                                    <th>Community Need</th>
+                                    <th>Required Skill</th>
+                                    <th>Volunteer</th>
+                                    <th>Volunteer Skill</th>
+                                    <th>Action</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                `;
+
+                needs.forEach(need => {
+
+                    const requiredSkill =
+                        String(
+                            need.skill_name ||
+                            need.required_skill ||
+                            ""
+                        ).trim();
+
+                    const required =
+                        requiredSkill.toLowerCase();
+
+                    const matchingVolunteers =
+                        Array.isArray(volunteers)
+                            ? volunteers.filter(v => {
+
+                                const volunteerSkill =
+                                    String(
+                                        v.skill_name ||
+                                        v.skills ||
+                                        ""
+                                    ).trim();
+
+                                const skill =
+                                    volunteerSkill.toLowerCase();
+
+                                return (
+                                    required &&
+                                    skill &&
+                                    (
+                                        skill === required ||
+                                        skill.includes(required) ||
+                                        required.includes(skill)
+                                    )
+                                );
+                            })
+                            : [];
+
+                    const uniqueMatches = [];
+
+                    matchingVolunteers.forEach(v => {
+
+                        const volunteerId =
+                            Number(
+                                v.volunteer_id ||
+                                v.id
+                            );
+
+                        const volunteerSkill =
+                            String(
+                                v.skill_name ||
+                                v.skills ||
+                                ""
+                            ).trim();
+
+                        const exists =
+                            uniqueMatches.some(
+                                item =>
+                                    item.volunteerId === volunteerId &&
+                                    item.volunteerSkill.toLowerCase() ===
+                                    volunteerSkill.toLowerCase()
+                            );
+
+                        if (!exists) {
+                            uniqueMatches.push({
+                                volunteerId,
+                                volunteerName:
+                                    v.full_name ||
+                                    v.name ||
+                                    "Unknown Volunteer",
+                                volunteerSkill
+                            });
+                        }
+                    });
+
+                    if (uniqueMatches.length === 0) {
+
+                        html += `
+                            <tr>
+
+                                <td>
+                                    ${escapeHtml(
+                                        need.community_member_name ||
+                                        "-"
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        need.title ||
+                                        need.need_title ||
+                                        need.need_name ||
+                                        "-"
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        requiredSkill ||
+                                        "-"
+                                    )}
+                                </td>
+
+                                <td>
+                                    No matching volunteer
+                                </td>
+
+                                <td>
+                                    -
+                                </td>
+
+                                <td>
+                                    <span class="empty">
+                                        No matching volunteer
+                                    </span>
+                                </td>
+
+                            </tr>
+                        `;
+
+                        return;
+                    }
+
+                    uniqueMatches.forEach(v => {
+
+                        const needId =
+                            Number(need.id);
+
+                        html += `
+                            <tr>
+
+                                <td>
+                                    ${escapeHtml(
+                                        need.community_member_name ||
+                                        "-"
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        need.title ||
+                                        need.need_title ||
+                                        need.need_name ||
+                                        "-"
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        requiredSkill ||
+                                        "-"
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        v.volunteerName
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        v.volunteerSkill ||
+                                        "-"
+                                    )}
+                                </td>
+
+                                <td>
+
+                                    <div class="table-actions">
+
+                                        <button
+                                            class="btn-primary"
+                                            onclick="matchVolunteer(
+                                                ${v.volunteerId},
+                                                ${needId}
+                                            )"
+                                        >
+                                            Match
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        `;
+                    });
+                });
+
+                html += `
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                `;
+
+                container.innerHTML = html;
+
+            } catch (error) {
+
+                container.innerHTML = "";
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        /* =========================
+           MATCH VOLUNTEER
+        ========================= */
+
+        async function matchVolunteer(
+            volunteerId,
+            needId
+        ) {
+
+            if (
+                !confirm(
+                    "Are you sure you want to match this volunteer with this community need?"
+                )
+            ) {
+                return;
+            }
+
+
+            try {
+
+                await apiRequest(
+                    "/api/coordinator/match",
+                    {
+                        method: "POST",
+
+                        body: JSON.stringify({
+                            volunteer_id:
+                                volunteerId,
+
+                            need_id:
+                                needId
+                        })
+                    }
+                );
+
+
+                showMessage(
+                    "Volunteer successfully matched."
+                );
+
+
+                await loadDashboard();
+
+                await loadMatchingData();
+
+            } catch (error) {
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        /* =========================
+           ASSIGNMENT REVIEW
+        ========================= */
+
+        async function viewAssignments() {
+
+            const container =
+                document.getElementById(
+                    "assignmentResults"
+                );
+
+            container.innerHTML =
+                "Loading assignments...";
+
+            try {
+
+                const result =
+                    await apiRequest(
+                        "/api/coordinator/assignments"
+                    );
+
+                const assignments =
+                    result.data ||
+                    result.assignments ||
+                    result;
+
+
+                if (
+                    !Array.isArray(assignments) ||
+                    assignments.length === 0
+                ) {
+
+                    container.innerHTML =
+                        '<div class="empty">No assignments found.</div>';
+
+                    return;
+                }
+
+
+                let html = `
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Community Need</th>
+                                    <th>Volunteer</th>
+                                    <th>Assigned Date</th>
+                                    <th>Status</th>
+                                    <th>Decision</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                `;
+
+
+                assignments.forEach(a => {
+
+                    const status =
+                        a.status || "Assigned";
+
+
+                    let statusClass =
+                        "assigned";
+
+
+                    if (status === "Accepted") {
+                        statusClass = "accepted";
+                    }
+
+
+                    if (status === "Rejected") {
+                        statusClass = "rejected";
+                    }
+
+
+                    let decision = "-";
+
+
+                    if (status === "Assigned") {
+
+                        decision = `
+                            <div class="decision-actions">
+
+                                <button
+                                    class="btn-success"
+                                    onclick="processDecision(
+                                        ${Number(a.id)},
+                                        'approve'
+                                    )"
+                                >
+                                    Approve
+                                </button>
+
+                                <button
+                                    class="btn-danger"
+                                    onclick="processDecision(
+                                        ${Number(a.id)},
+                                        'reject'
+                                    )"
+                                >
+                                    Reject
+                                </button>
+
+                            </div>
+                        `;
+                    }
+
+
+                    html += `
+                        <tr>
+
+                            <td>
+                                ${escapeHtml(a.id)}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    a.need_title ||
+                                    a.need_name ||
+                                    a.community_need ||
+                                    "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    a.volunteer_name ||
+                                    a.volunteer_full_name ||
+                                    a.username ||
+                                    "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    a.assigned_date ||
+                                    "-"
+                                )}
+                            </td>
+
+                            <td>
+                                <span
+                                    class="status ${statusClass}"
+                                >
+                                    ${escapeHtml(status)}
+                                </span>
+                            </td>
+
+                            <td>
+                                ${decision}
+                            </td>
+
+                        </tr>
+                    `;
+                });
+
+
+                html += `
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                `;
+
+                container.innerHTML = html;
+
+            } catch (error) {
+
+                container.innerHTML = "";
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        /* =========================
+           APPROVE / REJECT
+        ========================= */
+
+        async function processDecision(
+            assignmentId,
+            action
+        ) {
+
+            const question =
+                action === "approve"
+                    ? "Approve this assignment?"
+                    : "Reject this assignment?";
+
+
+            if (!confirm(question)) {
+                return;
+            }
+
+
+            try {
+
+                await apiRequest(
+                    "/api/coordinator/assignments/decision",
+                    {
+                        method: "POST",
+
+                        body: JSON.stringify({
+
+                            assignment_id:
+                                assignmentId,
+
+                            action:
+                                action
+                        })
+                    }
+                );
+
+
+                showMessage(
+                    action === "approve"
+                        ? "Assignment approved successfully."
+                        : "Assignment rejected successfully."
+                );
+
+
+                await viewAssignments();
+
+                await loadDashboard();
+
+            } catch (error) {
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        /* =========================
+           PARTICIPATION
+        ========================= */
+
+        async function viewParticipation() {
+
+            const container =
+                document.getElementById(
+                    "participationResults"
+                );
+
+
+            try {
+
+                const result =
+                    await apiRequest(
+                        "/api/coordinator/assignments"
+                    );
+
+
+                const assignments =
+                    result.data ||
+                    result.assignments ||
+                    result;
+
+
+                const accepted =
+                    Array.isArray(assignments)
+                        ? assignments.filter(
+                            a =>
+                                a.status === "Accepted"
+                        )
+                        : [];
+
+
+                document.getElementById(
+                    "participationCount"
+                ).textContent =
+                    accepted.length;
+
+
+                if (accepted.length === 0) {
+
+                    container.innerHTML =
+                        '<div class="empty">No accepted assignments found.</div>';
+
+                    return;
+                }
+
+
+                container.innerHTML = `
+                    <div class="info">
+                        ${accepted.length}
+                        accepted assignment(s) are available
+                        for participation tracking.
+                    </div>
+                `;
+
+            } catch (error) {
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        /* =========================
+           LOGOUT
+        ========================= */
+
+        function logout() {
+
+            localStorage.removeItem(
+                "cse_vms_token"
+            );
+
+            localStorage.removeItem(
+                "user"
+            );
+
+            window.location.href =
+                "index.html";
+        }
+
+
+        /* =========================
+           START DASHBOARD
+        ========================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+                loadDashboard();
+            }
+        );
+
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

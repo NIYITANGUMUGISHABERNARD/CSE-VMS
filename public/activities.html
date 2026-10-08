@@ -1,0 +1,485 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CSE-VMS | Activities</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f6;
+            color: #222;
+        }
+
+        .header {
+            background: #0b6b3a;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .back-btn {
+            background: white;
+            color: #0b6b3a;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 25px 30px;
+        }
+
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-section h2 {
+            color: #0b6b3a;
+        }
+
+        .count {
+            background: #0b6b3a;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #b00020;
+        }
+
+        .loading {
+            background: #e8f1ff;
+            color: #1557a0;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0b6b3a;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 13px 14px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f5faf7;
+        }
+
+        .role {
+            background: #e7f4ec;
+            color: #0b6b3a;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .action {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        @media (max-width: 700px) {
+            .header {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .top-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            th,
+            td {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>CSE-VMS | Activities</h1>
+
+        <a href="admin.html" class="back-btn">
+            ← Back to Dashboard
+        </a>
+    </header>
+
+    <main class="container">
+
+        <div class="top-section">
+            <h2>System Activities</h2>
+
+            <div class="count" id="activityCount">
+                Activities: 0
+            </div>
+        </div>
+
+        <div id="loadingMessage" class="message loading">
+            Loading activities...
+        </div>
+
+        <div id="errorMessage" class="message error"></div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                        <th>Description</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+
+                <tbody id="activitiesTableBody">
+
+                    <tr>
+                        <td colspan="7" class="empty">
+                            Loading activities...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+    <script>
+
+        const API_BASE = "http://127.0.0.1:3000";
+
+        const token =
+            localStorage.getItem("cse_vms_token");
+
+
+        // ==========================================
+        // HTML ELEMENTS
+        // ==========================================
+
+        const loadingMessage =
+            document.getElementById("loadingMessage");
+
+        const errorMessage =
+            document.getElementById("errorMessage");
+
+        const tableBody =
+            document.getElementById("activitiesTableBody");
+
+        const activityCount =
+            document.getElementById("activityCount");
+
+
+        // ==========================================
+        // CHECK LOGIN TOKEN
+        // ==========================================
+
+        if (!token) {
+            window.location.href = "index.html";
+        }
+
+
+        // ==========================================
+        // LOAD ACTIVITIES
+        // ==========================================
+
+        async function loadActivities() {
+
+            loadingMessage.style.display = "block";
+
+            errorMessage.style.display = "none";
+
+
+            try {
+
+                const response = await fetch(API_BASE + "/api/activities",
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                "Bearer " + token
+                        }
+                    }
+                );
+
+
+                const data =
+                    await response.json();
+
+
+                // ==================================
+                // AUTHENTICATION ERROR
+                // ==================================
+
+                if (response.status === 401) {
+
+                    localStorage.removeItem(
+                        "cse_vms_token"
+                    );
+
+                    window.location.href =
+                        "index.html";
+
+                    return;
+                }
+
+
+                // ==================================
+                // PERMISSION ERROR
+                // ==================================
+
+                if (response.status === 403) {
+
+                    throw new Error(
+                        data.message ||
+                        "You do not have permission to monitor activities."
+                    );
+                }
+
+
+                // ==================================
+                // SERVER ERROR
+                // ==================================
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Failed to retrieve activities."
+                    );
+                }
+
+
+                // ==================================
+                // GET ACTIVITIES
+                // ==================================
+
+                const activities =
+                    data.activities || [];
+
+
+                activityCount.textContent =
+                    "Activities: " +
+                    activities.length;
+
+
+                tableBody.innerHTML = "";
+
+
+                // ==================================
+                // NO ACTIVITIES
+                // ==================================
+
+                if (activities.length === 0) {
+
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty">
+                                No activities found.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+
+                // ==================================
+                // DISPLAY ACTIVITIES
+                // ==================================
+
+                activities.forEach(
+                    (activity, index) => {
+
+                        const row =
+                            document.createElement("tr");
+
+
+                        const date =
+                            activity.created_at
+                                ? new Date(
+                                    activity.created_at
+                                ).toLocaleString()
+                                : "N/A";
+
+
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+
+                            <td>
+                                ${escapeHtml(
+                                    activity.user_name ||
+                                    "N/A"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    activity.user_email ||
+                                    "N/A"
+                                )}
+                            </td>
+
+                            <td>
+                                <span class="role">
+                                    ${escapeHtml(
+                                        activity.role_name ||
+                                        "N/A"
+                                    )}
+                                </span>
+                            </td>
+
+                            <td class="action">
+                                ${escapeHtml(
+                                    activity.action ||
+                                    "N/A"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    activity.description ||
+                                    "N/A"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(date)}
+                            </td>
+                        `;
+
+
+                        tableBody.appendChild(row);
+
+                    }
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Activities loading error:",
+                    error
+                );
+
+
+                errorMessage.textContent =
+                    error.message ||
+                    "Unable to load activities.";
+
+
+                errorMessage.style.display =
+                    "block";
+
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty">
+                            Unable to load activities.
+                        </td>
+                    </tr>
+                `;
+
+            } finally {
+
+                loadingMessage.style.display =
+                    "none";
+            }
+        }
+
+
+        // ==========================================
+        // HTML SECURITY
+        // ==========================================
+
+        function escapeHtml(value) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent = value;
+
+            return div.innerHTML;
+        }
+
+
+        // ==========================================
+        // START
+        // ==========================================
+
+        loadActivities();
+
+    </script>
+
+</body>
+
+</html>
+
+
+

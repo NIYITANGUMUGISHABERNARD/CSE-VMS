@@ -1,0 +1,1183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE-VMS | Welcome</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #16a34a;
+            --green-dark: #087443;
+            --blue: #2563eb;
+            --orange: #f59e0b;
+            --purple: #7c3aed;
+            --red: #ef4444;
+            --navy: #12325b;
+            --text: #17345f;
+            --light: #f5f9ff;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f7fbff;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            height: 82px;
+            background: rgba(255,255,255,0.97);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid #e5edf7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(18,50,91,0.07);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        /* CODE-BASED LOGO */
+
+        .logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 17px;
+            background: linear-gradient(135deg, #0a8f50, #18b66a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(22,163,74,0.25);
+        }
+
+        .logo::before,
+        .logo::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .logo::before {
+            width: 16px;
+            height: 16px;
+            background: white;
+            top: 9px;
+            left: 18px;
+        }
+
+        .logo::after {
+            width: 29px;
+            height: 16px;
+            background: white;
+            bottom: 9px;
+            left: 11px;
+            border-radius: 18px 18px 10px 10px;
+        }
+
+        .brand-text h1 {
+            font-size: 25px;
+            color: var(--navy);
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: #61748f;
+            margin-top: 5px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        nav a {
+            color: #29476d;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            color: var(--green);
+        }
+
+        .header-btn {
+            background: linear-gradient(135deg, #079447, #16b85f);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(22,163,74,0.2);
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 550px;
+            padding: 65px 5% 55px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 35px;
+            background:
+                radial-gradient(circle at 5% 10%, rgba(22,163,74,0.13), transparent 30%),
+                radial-gradient(circle at 95% 20%, rgba(37,99,235,0.13), transparent 30%),
+                linear-gradient(135deg, #ffffff 0%, #eff8ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(245,158,11,0.08);
+            right: -100px;
+            bottom: -130px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #16a34a, #0ea5e9);
+            color: white;
+            padding: 8px 17px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .7px;
+            margin-bottom: 20px;
+        }
+
+        .hero h2 {
+            font-size: clamp(38px, 4.5vw, 63px);
+            line-height: 1.05;
+            color: var(--navy);
+            margin-bottom: 20px;
+            max-width: 700px;
+        }
+
+        .hero h2 .green {
+            color: var(--green);
+        }
+
+        .hero h2 .blue {
+            color: var(--blue);
+        }
+
+        .hero-description {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #526983;
+            max-width: 610px;
+            margin-bottom: 28px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .enter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #079447, #18b86b);
+            color: white;
+            padding: 16px 25px;
+            border-radius: 35px;
+            font-size: 15px;
+            font-weight: 800;
+            box-shadow: 0 12px 28px rgba(22,163,74,0.25);
+            transition: .25s;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 17px 32px rgba(22,163,74,0.32);
+        }
+
+        .arrow-circle {
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .secure {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #60738d;
+            font-size: 13px;
+        }
+
+        .lock {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e8f8ef;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ================= PERSON / COMPUTER ILLUSTRATION ================= */
+
+        .hero-visual {
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .visual-card {
+            width: min(580px, 100%);
+            min-height: 390px;
+            background: linear-gradient(145deg, #e9f7ff, #ffffff);
+            border: 1px solid #dbeaf7;
+            border-radius: 35px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(18,50,91,.12);
+        }
+
+        .visual-card::before {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            background: rgba(37,99,235,.11);
+            right: -70px;
+            top: -70px;
+        }
+
+        .visual-card::after {
+            content: "";
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: rgba(22,163,74,.10);
+            left: -60px;
+            bottom: -60px;
+        }
+
+        .visual-title {
+            position: absolute;
+            left: 30px;
+            top: 27px;
+            z-index: 3;
+        }
+
+        .visual-title h3 {
+            font-size: 21px;
+            color: var(--navy);
+        }
+
+        .visual-title p {
+            color: #71849c;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* PERSON */
+
+        .person {
+            position: absolute;
+            width: 180px;
+            height: 220px;
+            right: 75px;
+            top: 78px;
+            z-index: 3;
+        }
+
+        .head {
+            position: absolute;
+            width: 72px;
+            height: 78px;
+            background: #9a5d39;
+            border-radius: 48% 48% 45% 45%;
+            top: 5px;
+            left: 52px;
+        }
+
+        .hair {
+            position: absolute;
+            width: 77px;
+            height: 45px;
+            background: #171717;
+            border-radius: 50% 50% 25% 25%;
+            top: -5px;
+            left: 48px;
+            z-index: 2;
+        }
+
+        .eye1,
+        .eye2 {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: #1d1d1d;
+            border-radius: 50%;
+            top: 38px;
+            z-index: 4;
+        }
+
+        .eye1 { left: 69px; }
+        .eye2 { left: 99px; }
+
+        .neck {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #8b5132;
+            top: 70px;
+            left: 73px;
+        }
+
+        .body {
+            position: absolute;
+            width: 140px;
+            height: 115px;
+            background: #1f5c83;
+            border-radius: 45px 45px 20px 20px;
+            top: 88px;
+            left: 20px;
+        }
+
+        .shirt-line {
+            position: absolute;
+            width: 4px;
+            height: 70px;
+            background: #5fa5d4;
+            left: 68px;
+            top: 17px;
+        }
+
+        .arm-left,
+        .arm-right {
+            position: absolute;
+            width: 35px;
+            height: 95px;
+            background: #8b5132;
+            border-radius: 25px;
+            top: 105px;
+            z-index: 1;
+        }
+
+        .arm-left {
+            left: 4px;
+            transform: rotate(28deg);
+        }
+
+        .arm-right {
+            right: 2px;
+            transform: rotate(-30deg);
+        }
+
+        /* LAPTOP */
+
+        .laptop {
+            position: absolute;
+            width: 250px;
+            height: 145px;
+            left: 52px;
+            bottom: 25px;
+            z-index: 5;
+        }
+
+        .screen {
+            width: 190px;
+            height: 112px;
+            background: #19395d;
+            border: 8px solid #b8c9d9;
+            border-radius: 12px 12px 5px 5px;
+            margin: auto;
+            position: relative;
+            box-shadow: 0 12px 25px rgba(18,50,91,.18);
+        }
+
+        .screen-content {
+            position: absolute;
+            inset: 8px;
+            border-radius: 4px;
+            background:
+                linear-gradient(135deg, #16a34a 25%, transparent 25%) 0 0/35px 35px,
+                linear-gradient(315deg, #2563eb 25%, transparent 25%) 0 0/35px 35px,
+                #eef7ff;
+        }
+
+        .screen-content::after {
+            content: "CSE-VMS";
+            position: absolute;
+            left: 17px;
+            top: 35px;
+            color: #12325b;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .keyboard {
+            width: 250px;
+            height: 20px;
+            background: #aebdca;
+            border-radius: 4px 4px 12px 12px;
+            transform: perspective(80px) rotateX(12deg);
+            margin-top: 2px;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .section {
+            padding: 60px 5%;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .section-heading span {
+            color: var(--green);
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .section-heading h2 {
+            color: var(--navy);
+            font-size: 32px;
+            margin-top: 8px;
+        }
+
+        .section-heading p {
+            color: #71849c;
+            margin-top: 8px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px;
+        }
+
+        .feature {
+            min-height: 210px;
+            border-radius: 22px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: .25s;
+            border: 1px solid rgba(0,0,0,.04);
+        }
+
+        .feature:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 35px rgba(18,50,91,.13);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 17px;
+        }
+
+        .feature h3 {
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #536a84;
+        }
+
+        .green-card {
+            background: linear-gradient(145deg, #edfff3, #d9f8e4);
+        }
+        .green-card .feature-icon { background: var(--green); }
+        .green-card h3 { color: #087443; }
+
+        .blue-card {
+            background: linear-gradient(145deg, #eff6ff, #dcecff);
+        }
+        .blue-card .feature-icon { background: var(--blue); }
+        .blue-card h3 { color: #1854c8; }
+
+        .orange-card {
+            background: linear-gradient(145deg, #fff9e9, #fff0c8);
+        }
+        .orange-card .feature-icon { background: var(--orange); }
+        .orange-card h3 { color: #d77d00; }
+
+        .purple-card {
+            background: linear-gradient(145deg, #f6f0ff, #eadcff);
+        }
+        .purple-card .feature-icon { background: var(--purple); }
+        .purple-card h3 { color: #6726ce; }
+
+        .red-card {
+            background: linear-gradient(145deg, #fff1f1, #ffe0e0);
+        }
+        .red-card .feature-icon { background: var(--red); }
+        .red-card h3 { color: #d52e2e; }
+
+        /* ================= TABLE ================= */
+
+        .roles-area {
+            padding: 0 5% 65px;
+        }
+
+        .roles-container {
+            background: white;
+            border-radius: 28px;
+            padding: 30px;
+            border: 1px solid #e1ebf5;
+            box-shadow: 0 15px 40px rgba(18,50,91,.07);
+        }
+
+        .roles-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .roles-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .roles-header h2 {
+            color: var(--navy);
+            font-size: 26px;
+        }
+
+        .roles-header p {
+            color: #74869d;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        th {
+            background: linear-gradient(90deg, #e9f4ff, #eef2ff);
+            color: #163c70;
+            text-align: left;
+            padding: 15px 18px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #e8eef5;
+            color: #536a84;
+            font-size: 13px;
+        }
+
+        tr:hover td {
+            background: #f8fbff;
+        }
+
+        .role-name {
+            font-weight: 800;
+        }
+
+        .admin { color: #2563eb; }
+        .coordinator { color: #16a34a; }
+        .volunteer { color: #7c3aed; }
+        .community { color: #ea7b00; }
+
+        /* ================= IMPACT ================= */
+
+        .impact {
+            margin: 0 5% 65px;
+            padding: 40px;
+            border-radius: 28px;
+            background:
+                radial-gradient(circle at 85% 20%, rgba(37,99,235,.25), transparent 25%),
+                linear-gradient(135deg, #0e3766, #12325b);
+            color: white;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .impact h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .impact p {
+            line-height: 1.8;
+            color: #dbe9f8;
+        }
+
+        .impact-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .impact-logo-circle {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.09);
+            border: 2px solid rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 75px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #0b2748;
+            color: #c8d8e9;
+            padding: 24px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            font-size: 12px;
+        }
+
+        .footer-brand {
+            color: white;
+            font-weight: 800;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1050px) {
+            nav {
+                display: none;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature:last-child {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 45px;
+            }
+
+            .hero h2 {
+                font-size: 42px;
+            }
+
+            .hero-visual {
+                min-height: 360px;
+            }
+
+            .person {
+                right: 55px;
+            }
+
+            .impact {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .impact-logo {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 0 20px;
+            }
+
+            .brand-text p {
+                display: none;
+            }
+
+            .header-btn {
+                padding: 10px 13px;
+                font-size: 11px;
+            }
+
+            .hero {
+                padding: 40px 20px;
+            }
+
+            .hero h2 {
+                font-size: 36px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .visual-card {
+                min-height: 340px;
+            }
+
+            .person {
+                right: 30px;
+                transform: scale(.85);
+                transform-origin: bottom right;
+            }
+
+            .laptop {
+                left: 20px;
+                transform: scale(.8);
+                transform-origin: bottom left;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .feature:last-child {
+                grid-column: auto;
+            }
+
+            .roles-container {
+                padding: 20px;
+            }
+
+            .impact {
+                margin-left: 20px;
+                margin-right: 20px;
+                padding: 30px 20px;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="brand">
+        <div class="logo"></div>
+
+        <div class="brand-text">
+            <h1>CSE-VMS</h1>
+            <p>Community Skills Exchange & Volunteer Management System</p>
+        </div>
+    </div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#roles">Roles</a>
+        <a href="#impact">Our Impact</a>
+    </nav>
+
+    <a href="login.html" class="header-btn">
+        LOGIN
+    </a>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <span class="badge">
+            COMMUNITY • SKILLS • VOLUNTEERS
+        </span>
+
+        <h2>
+            Empowering Communities
+            <br>
+            Through <span class="green">Skills</span> &
+            <span class="blue">Volunteering</span>
+        </h2>
+
+        <p class="hero-description">
+            CSE-VMS connects community members and volunteers,
+            facilitates skills exchange, responds to community needs,
+            and coordinates meaningful activities for stronger communities.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="login.html" class="enter-btn">
+                <span class="arrow-circle">→</span>
+                ENTER IN THE SYSTEM
+            </a>
+
+            <div class="secure">
+                <span class="lock">🔒</span>
+                <span>
+                    Secure access for<br>
+                    authorized users
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PERSON USING COMPUTER -->
+
+    <div class="hero-visual">
+
+        <div class="visual-card">
+
+            <div class="visual-title">
+                <h3>One Platform, Many Connections</h3>
+                <p>Technology supporting community development</p>
+            </div>
+
+            <!-- Person -->
+            <div class="person">
+
+                <div class="hair"></div>
+
+                <div class="head"></div>
+
+                <div class="eye1"></div>
+                <div class="eye2"></div>
+
+                <div class="neck"></div>
+
+                <div class="body">
+                    <div class="shirt-line"></div>
+                </div>
+
+                <div class="arm-left"></div>
+                <div class="arm-right"></div>
+
+            </div>
+
+            <!-- Laptop -->
+            <div class="laptop">
+
+                <div class="screen">
+                    <div class="screen-content"></div>
+                </div>
+
+                <div class="keyboard"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="section" id="features">
+
+    <div class="section-heading">
+
+        <span>CORE AREAS</span>
+
+        <h2>Connecting People, Skills & Community Needs</h2>
+
+        <p>
+            CSE-VMS brings important community activities together in one platform.
+        </p>
+
+    </div>
+
+
+    <div class="features">
+
+        <div class="feature green-card">
+
+            <div class="feature-icon">👥</div>
+
+            <h3>Community</h3>
+
+            <p>
+                Build stronger communities through collaboration,
+                participation and shared support.
+            </p>
+
+        </div>
+
+
+        <div class="feature blue-card">
+
+            <div class="feature-icon">🤝</div>
+
+            <h3>Volunteers</h3>
+
+            <p>
+                Connect volunteers with opportunities where their
+                skills and time can make a difference.
+            </p>
+
+        </div>
+
+
+        <div class="feature orange-card">
+
+            <div class="feature-icon">🎓</div>
+
+            <h3>Skills Exchange</h3>
+
+            <p>
+                Share useful skills and support learning,
+                development and community capacity.
+            </p>
+
+        </div>
+
+
+        <div class="feature purple-card">
+
+            <div class="feature-icon">📅</div>
+
+            <h3>Activities</h3>
+
+            <p>
+                Coordinate community activities and keep
+                participation organized and visible.
+            </p>
+
+        </div>
+
+
+        <div class="feature red-card">
+
+            <div class="feature-icon">❤</div>
+
+            <h3>Community Needs</h3>
+
+            <p>
+                Submit community needs and connect them with
+                available volunteer support.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ROLES TABLE ================= -->
+
+<section class="roles-area" id="roles">
+
+    <div class="roles-container">
+
+        <div class="roles-header">
+
+            <div class="roles-icon">
+                👥
+            </div>
+
+            <div>
+                <h2>System Roles & Main Functions</h2>
+
+                <p>
+                    Each role plays an important part in building a stronger community.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Role</th>
+                        <th>Main Functions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td class="role-name admin">
+                            🔵 Administrator
+                        </td>
+
+                        <td>
+                            Users, Skills, Community Needs, Activities and Notifications
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="role-name coordinator">
+                            🟢 Coordinator
+                        </td>
+
+                        <td>
+                            Review Needs, Match Volunteers and Manage Assignments
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="role-name volunteer">
+                            🟣 Volunteer
+                        </td>
+
+                        <td>
+                            Profile, Skills, Assignments and Feedback
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="role-name community">
+                            🟠 Community Member
+                        </td>
+
+                        <td>
+                            Submit Needs, View Assigned Volunteers and Provide Feedback
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= IMPACT ================= -->
+
+<section class="impact" id="impact">
+
+    <div>
+
+        <h2>
+            Small Actions Make a Big Impact
+        </h2>
+
+        <p>
+            CSE-VMS provides a digital platform for connecting people,
+            exchanging skills, responding to community needs and
+            coordinating volunteer activities.
+        </p>
+
+    </div>
+
+
+    <div class="impact-logo">
+
+        <div class="impact-logo-circle">
+            🌱
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div>
+        © 2026 <span class="footer-brand">CSE-VMS</span>
+        &nbsp; | &nbsp;
+        Community Skills Exchange & Volunteer Management System
+    </div>
+
+    <div>
+        ♥ Together for a Better Community
+    </div>
+
+</footer>
+
+</body>
+</html>

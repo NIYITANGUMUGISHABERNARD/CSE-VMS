@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE-VMS - Manage Users</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7f6;
+    color: #1f2937;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background: #12372a;
+    color: white;
+    padding: 25px 15px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin: 0 0 30px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 13px 15px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #1f6f4a;
+}
+
+.main {
+    flex: 1;
+    padding: 30px;
+    overflow-x: auto;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.topbar h1 {
+    color: #12372a;
+    margin: 0;
+}
+
+.logout {
+    background: #c0392b;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-header h2 {
+    margin: 0;
+    color: #12372a;
+}
+
+.btn {
+    border: none;
+    border-radius: 6px;
+    padding: 9px 13px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #1f6f4a;
+    color: white;
+}
+
+.btn-edit {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-role {
+    background: #3498db;
+    color: white;
+}
+
+.btn-active {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-inactive {
+    background: #c0392b;
+    color: white;
+}
+
+.btn-cancel {
+    background: #777;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 950px;
+}
+
+th,
+td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #12372a;
+    color: white;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.active-status {
+    background: #d5f5e3;
+    color: #196f3d;
+}
+
+.inactive-status {
+    background: #fadbd8;
+    color: #922b21;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 10px;
+    font-size: 12px;
+    min-width: 65px;
+    height: 34px;
+    white-space: nowrap;
+}
+
+.message {
+    display: none;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+}
+
+.success {
+    background: #d5f5e3;
+    color: #196f3d;
+}
+
+.error {
+    background: #fadbd8;
+    color: #922b21;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    padding: 25px;
+    border-radius: 10px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #12372a;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.loading {
+    text-align: center;
+    padding: 25px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+<h2>CSE-VMS</h2>
+
+<a href="admin.html">Dashboard</a>
+<a href="users.html" class="active">Users</a>
+<a href="skills.html">Skills</a>
+<a href="community-needs.html">Community Needs</a>
+<a href="activities.html">Activities</a>
+<a href="notifications.html">Notifications</a>
+
+</aside>
+
+
+<main class="main">
+
+<div class="topbar">
+    <h1>Manage Users</h1>
+    <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div id="message" class="message"></div>
+
+<div class="card">
+
+<div class="card-header">
+    <h2>User Accounts</h2>
+
+    <button class="btn btn-primary" onclick="openAddModal()">
+        Add User
+    </button>
+</div>
+
+<div id="loading" class="loading">
+    Loading users...
+</div>
+
+<table id="usersTable" style="display:none;">
+
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Full Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Role</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="usersBody"></tbody>
+
+</table>
+
+</div>
+
+</main>
+
+</div>
+
+
+<!-- USER MODAL -->
+
+<div id="userModal" class="modal">
+
+<div class="modal-content">
+
+<h2 id="modalTitle">Add User</h2>
+
+<form id="userForm">
+
+<input type="hidden" id="userId">
+
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="fullName" required>
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="email" required>
+</div>
+
+<div class="form-group" id="passwordGroup">
+<label>Password</label>
+<input type="password" id="password">
+</div>
+
+<div class="form-group">
+<label>Phone</label>
+<input type="text" id="phone" required>
+</div>
+
+<div class="form-group">
+<label>Role</label>
+
+<select id="role" required>
+<option value="">Select Role</option>
+<option value="2">Coordinator</option>
+<option value="3">Volunteer</option>
+<option value="4">Community Member</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Status</label>
+
+<select id="status">
+<option value="Active">Active</option>
+<option value="Inactive">Inactive</option>
+</select>
+
+</div>
+
+<div class="form-buttons">
+
+<button type="button" class="btn btn-cancel" onclick="closeModal()">
+Cancel
+</button>
+
+<button type="submit" class="btn btn-primary">
+Save User
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ROLE MODAL -->
+
+<div id="roleModal" class="modal">
+
+<div class="modal-content">
+
+<h2>Change User Role</h2>
+
+<input type="hidden" id="roleUserId">
+
+<div class="form-group">
+
+<label>New Role</label>
+
+<select id="newRole">
+<option value="2">Coordinator</option>
+<option value="3">Volunteer</option>
+<option value="4">Community Member</option>
+</select>
+
+</div>
+
+<div class="form-buttons">
+
+<button class="btn btn-cancel" onclick="closeRoleModal()">
+Cancel
+</button>
+
+<button class="btn btn-primary" onclick="saveRole()">
+Change Role
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const API_URL = "http://127.0.0.1:3000";
+
+const token = localStorage.getItem("cse_vms_token");
+
+if (!token) {
+    window.location.href = "index.html";
+}
+
+
+/* MESSAGE */
+
+function showMessage(message, type = "success") {
+
+    const box = document.getElementById("message");
+
+    box.textContent = message;
+
+    box.className = "message " + type;
+
+    box.style.display = "block";
+
+    setTimeout(function() {
+        box.style.display = "none";
+    }, 4000);
+}
+
+
+/* LOAD USERS */
+
+async function loadUsers() {
+
+    const loading = document.getElementById("loading");
+    const table = document.getElementById("usersTable");
+    const body = document.getElementById("usersBody");
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/api/users",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Failed to retrieve users.");
+        }
+
+        body.innerHTML = "";
+
+        if (!data.users || data.users.length === 0) {
+
+            body.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align:center;">
+                        No users found.
+                    </td>
+                </tr>
+            `;
+
+        } else {
+
+            data.users.forEach(function(user) {
+
+                const row = document.createElement("tr");
+
+                const statusClass =
+                    user.status === "Active"
+                        ? "active-status"
+                        : "inactive-status";
+
+                let statusButton = "";
+
+                if (user.status === "Active") {
+
+                    statusButton = `
+                        <button
+                            class="btn btn-inactive"
+                            onclick="deactivateUser(${user.id})">
+                            Deactivate
+                        </button>
+                    `;
+
+                } else {
+
+                    statusButton = `
+                        <button
+                            class="btn btn-active"
+                            onclick="activateUser(${user.id})">
+                            Activate
+                        </button>
+                    `;
+                }
+
+                row.innerHTML = `
+                    <td>${escapeHtml(user.id)}</td>
+
+                    <td>${escapeHtml(user.full_name)}</td>
+
+                    <td>${escapeHtml(user.email)}</td>
+
+                    <td>${escapeHtml(user.phone || "")}</td>
+
+                    <td>${escapeHtml(user.role_name)}</td>
+
+                    <td>
+                        <span class="status ${statusClass}">
+                            ${escapeHtml(user.status)}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+
+                            <button
+                                class="btn btn-edit"
+                                onclick="editUser(${user.id})">
+                                Edit
+                            </button>
+
+                            <button
+                                class="btn btn-role"
+                                onclick="openRoleModal(${user.id}, ${user.role_id})">
+                                Role
+                            </button>
+
+                            ${statusButton}
+
+                        </div>
+                    </td>
+                `;
+
+                body.appendChild(row);
+
+            });
+        }
+
+        loading.style.display = "none";
+        table.style.display = "table";
+
+    } catch (error) {
+
+        loading.textContent = error.message;
+
+        showMessage(error.message, "error");
+    }
+}
+
+
+/* ADD USER */
+
+window.openAddModal = function() {
+
+    document.getElementById("modalTitle").textContent =
+        "Add User";
+
+    document.getElementById("userForm").reset();
+
+    document.getElementById("userId").value = "";
+
+    document.getElementById("passwordGroup").style.display =
+        "block";
+
+    document.getElementById("password").required = true;
+
+    document.getElementById("status").value = "Active";
+
+    document.getElementById("userModal").style.display =
+        "flex";
+}
+
+
+/* EDIT USER */
+
+async function editUser(id) {
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/api/users/" + id,
+            {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Failed to retrieve user.");
+        }
+
+        const user = data.user;
+
+        document.getElementById("modalTitle").textContent =
+            "Edit User";
+
+        document.getElementById("userId").value =
+            user.id;
+
+        document.getElementById("fullName").value =
+            user.full_name;
+
+        document.getElementById("email").value =
+            user.email;
+
+        document.getElementById("phone").value =
+            user.phone || "";
+
+        document.getElementById("role").value =
+            user.role_id;
+
+        document.getElementById("status").value =
+            user.status;
+
+        document.getElementById("password").value = "";
+
+        document.getElementById("password").required = false;
+
+        document.getElementById("passwordGroup").style.display =
+            "none";
+
+        document.getElementById("userModal").style.display =
+            "flex";
+
+    } catch (error) {
+
+        showMessage(error.message, "error");
+    }
+}
+
+
+/* SAVE USER */
+
+document.getElementById("userForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const id =
+            document.getElementById("userId").value;
+
+        const payload = {
+
+            full_name:
+                document.getElementById("fullName").value.trim(),
+
+            email:
+                document.getElementById("email").value.trim(),
+
+            phone:
+                document.getElementById("phone").value.trim(),
+
+            role_id:
+                Number(document.getElementById("role").value),
+
+            status:
+                document.getElementById("status").value
+        };
+
+        if (!id) {
+
+            payload.password =
+                document.getElementById("password").value;
+        }
+
+        try {
+
+            const response = await fetch(
+                id
+                    ? API_URL + "/api/users/" + id
+                    : API_URL + "/api/users",
+                {
+                    method: id ? "PUT" : "POST",
+
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(payload)
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || "Operation failed.");
+            }
+
+            closeModal();
+
+            showMessage(data.message);
+
+            loadUsers();
+
+        } catch (error) {
+
+            showMessage(error.message, "error");
+        }
+    }
+);
+
+
+/* CHANGE ROLE */
+
+function openRoleModal(id, currentRole) {
+
+    document.getElementById("roleUserId").value = id;
+
+    document.getElementById("newRole").value = currentRole;
+
+    document.getElementById("roleModal").style.display =
+        "flex";
+}
+
+
+async function saveRole() {
+
+    const id =
+        document.getElementById("roleUserId").value;
+
+    const roleId =
+        Number(document.getElementById("newRole").value);
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/api/users/" + id + "/role",
+            {
+                method: "PUT",
+
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    role_id: roleId
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Failed to change role.");
+        }
+
+        closeRoleModal();
+
+        showMessage(data.message);
+
+        loadUsers();
+
+    } catch (error) {
+
+        showMessage(error.message, "error");
+    }
+}
+
+
+/* ACTIVATE */
+
+async function activateUser(id) {
+
+    if (!confirm("Activate this user account?")) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/api/users/" + id + "/activate",
+            {
+                method: "PUT",
+
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Failed to activate user.");
+        }
+
+        showMessage(data.message);
+
+        loadUsers();
+
+    } catch (error) {
+
+        showMessage(error.message, "error");
+    }
+}
+
+
+/* DEACTIVATE */
+
+async function deactivateUser(id) {
+
+    if (!confirm("Deactivate this user account?")) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/api/users/" + id + "/deactivate",
+            {
+                method: "PUT",
+
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Failed to deactivate user.");
+        }
+
+        showMessage(data.message);
+
+        loadUsers();
+
+    } catch (error) {
+
+        showMessage(error.message, "error");
+    }
+}
+
+
+/* CLOSE */
+
+function closeModal() {
+    document.getElementById("userModal").style.display = "none";
+}
+
+function closeRoleModal() {
+    document.getElementById("roleModal").style.display = "none";
+}
+
+
+/* HTML SAFETY */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* LOGOUT */
+
+function logout() {
+
+    localStorage.removeItem("cse_vms_token");
+
+    window.location.href = "index.html";
+}
+
+
+/* START */
+
+loadUsers();
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
